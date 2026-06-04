@@ -362,12 +362,8 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
     </div>
     <div class="card">
       <div class="ct rd">💸 Today's Expenses</div>
+      <div style="font-size:11px;color:#475569;margin-bottom:8px;">Add expenses in the <strong style="color:#ef4444;">Expenses tab</strong> →</div>
       <div id="exp-list"></div>
-      <div class="add-row" style="margin-top:10px;">
-        <input id="expl" placeholder="Expense description" style="flex:1"/>
-        <input id="expa" type="number" placeholder="Birr" style="width:80px"/>
-        <button class="btn-a" style="border-color:#ef444433;color:#ef4444;" onclick="addExpense()">+ Add</button>
-      </div>
     </div>
     <div class="card">
       <div class="ct pu">📁 Saved Reports</div>
@@ -1294,7 +1290,10 @@ function renderRugs(){
   const list=document.getElementById('rugs-list');list.innerHTML='';
   const filtered=rugs.filter(r=>r.ownerName.toLowerCase().includes(q)||r.ticketNo.toLowerCase().includes(q));
   if(!filtered.length){list.innerHTML=`<div style="text-align:center;padding:50px 20px;color:#334155;"><div style="font-size:44px;margin-bottom:10px;">🪣</div><div style="font-family:'Rajdhani',sans-serif;font-size:18px;">No rug orders yet</div></div>`;return;}
-  filtered.forEach(r=>{const clr=SCLR[r.status]||'#94a3b8';const d=document.createElement('div');d.className='oc';d.style.borderColor=r.paid?'#22c55e22':'#f9731333';d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;"><div><div class="tn" style="color:#f97316;">${esc(r.ticketNo)}</div><div class="on">${esc(r.ownerName)}</div><div class="os">${esc(r.phone)} · ${r.size} m²</div><span class="pb" style="background:${r.paid?'#052e16':'#1c1008'};color:${r.paid?'#22c55e':'#f97316'};border:1px solid ${r.paid?'#22c55e44':'#f9731644'};">${r.paid?'✅ PAID':'⚠️ UNPAID'}</span></div><div style="text-align:right;"><span class="sb2" style="background:${clr}22;color:${clr};border:1px solid ${clr}44;">${r.status}</span><div style="color:#f97316;font-family:'Rajdhani',sans-serif;font-size:18px;margin-top:6px;">Br ${r.totalPrice.toLocaleString()}</div></div></div><div style="font-size:11px;color:#475569;margin-bottom:8px;">${esc(r.timeIn)}</div>${r.photo?`<img src="${r.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;max-height:110px;object-fit:cover;border:1px solid #f9731633;"/>`:''}<div class="oa"><select class="ss" style="border-color:#f9731333;" onchange="updRugStatus('${r.ticketNo}',this.value)">${['Received','In Progress','Done','Released'].map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select><button class="btn-tk" style="color:#f97316;border-color:#f9731655;" onclick='showRugTk(${JSON.stringify(r).replace(/'/g,"&#39;")})'>🎫</button><button class="btn-ph" onclick="window.location.href='tel:${esc(r.phone)}'">📞</button>${r.status==='Done'&&!r.released?`<button class="btn-tk" style="color:#22c55e;border-color:#22c55e55;background:#052e16;font-size:11px;" onclick='openRelease(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✅ Release</button>`:''}</div>`;list.appendChild(d);});
+  filtered.forEach(r=>{const clr=SCLR[r.status]||'#94a3b8';const d=document.createElement('div');d.className='oc';d.style.borderColor=r.paid?'#22c55e22':'#f9731333';
+    const washerBadge=r.washerName?`<div style="display:inline-flex;align-items:center;gap:5px;background:#0a2020;border:1px solid #22d3ee33;border-radius:8px;padding:3px 10px;margin-bottom:8px;font-size:11px;color:#22d3ee;">👷 ${esc(r.washerName)}</div>`:'';
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;"><div><div class="tn" style="color:#f97316;">${esc(r.ticketNo)}</div><div class="on">${esc(r.ownerName)}</div><div class="os">${esc(r.phone)} · ${r.size} m²</div><span class="pb" style="background:${r.paid?'#052e16':'#1c1008'};color:${r.paid?'#22c55e':'#f97316'};border:1px solid ${r.paid?'#22c55e44':'#f9731644'};">${r.paid?'✅ PAID':'⚠️ UNPAID'}</span></div><div style="text-align:right;"><span class="sb2" style="background:${clr}22;color:${clr};border:1px solid ${clr}44;">${r.status}</span><div style="color:#f97316;font-family:'Rajdhani',sans-serif;font-size:18px;margin-top:6px;">Br ${r.totalPrice.toLocaleString()}</div></div></div><div style="font-size:11px;color:#475569;margin-bottom:8px;">${esc(r.timeIn)}</div>${washerBadge}${r.photo?`<img src="${r.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;max-height:110px;object-fit:cover;border:1px solid #f9731633;"/>`:''}<div class="oa"><select class="ss" style="border-color:#f9731333;" onchange="updRugStatus('${r.ticketNo}',this.value)">${['Received','In Progress','Done','Released'].map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select><button style="padding:5px 10px;background:${r.washerName?'#0a2020':'#0f2744'};border:1px solid ${r.washerName?'#22d3ee55':'#22d3ee33'};border-radius:8px;color:#22d3ee;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;" onclick="openAssignRugModal('${r.ticketNo}')">👷 ${r.washerName?'Re-Assign':'Assign'}</button><button class="btn-tk" style="color:#f97316;border-color:#f9731655;" onclick='showRugTk(${JSON.stringify(r).replace(/'/g,"&#39;")})'>🎫</button><button class="btn-ph" onclick="window.location.href='tel:${esc(r.phone)}'">📞</button>${r.status==='Done'&&!r.released?`<button class="btn-tk" style="color:#22c55e;border-color:#22c55e55;background:#052e16;font-size:11px;" onclick='openRelease(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✅ Release</button>`:''}</div>`;
+    list.appendChild(d);});
 }
 function updRugStatus(ticketNo,status){
   rugs=rugs.map(x=>x.ticketNo===ticketNo?{...x,status}:x);LS.s('as_rugs',rugs);
@@ -1339,33 +1338,34 @@ function confirmRelease(){
 
 /* ══ REPORTS ══ */
 function renderReports(){
-  const dk=todayKey(),dayO=orders.filter(o=>o.dateKey===dk),dayR=rugs.filter(r=>r.dateKey===dk),dayE=expenses[dk]||[];
-  const cs=dayO.reduce((a,o)=>a+o.totalPrice,0),rs=dayR.reduce((a,r)=>a+r.totalPrice,0),te=dayE.reduce((a,e)=>a+e.amount,0);
+  const dk=todayKey(),dayO=orders.filter(o=>o.dateKey===dk),dayR=rugs.filter(r=>r.dateKey===dk);
+  const todayBizExp=bizExpenses.filter(e=>e.dateKey===dk);
+  const cs=dayO.reduce((a,o)=>a+o.totalPrice,0),rs=dayR.reduce((a,r)=>a+r.totalPrice,0),te=todayBizExp.reduce((a,e)=>a+e.amt,0);
   document.getElementById('st-cars').textContent=dayO.length;document.getElementById('st-rugs').textContent=dayR.length;
   document.getElementById('st-sales').textContent='Br '+(cs+rs).toLocaleString();document.getElementById('st-exp').textContent='Br '+te.toLocaleString();document.getElementById('st-net').textContent='Br '+(cs+rs-te).toLocaleString();
   const el=document.getElementById('exp-list');el.innerHTML='';
-  dayE.forEach(e=>{const d=document.createElement('div');d.style.cssText='display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0f2744;font-size:12px;';d.innerHTML=`<span style="color:#94a3b8;">${esc(e.label)} <span style="color:#475569;font-size:10px;">${esc(e.time||'')}</span></span><span style="color:#ef4444;font-family:'Rajdhani',sans-serif;">Br ${e.amount.toLocaleString()}</span>`;el.appendChild(d);});
+  if(!todayBizExp.length){
+    el.innerHTML='<div style="color:#334155;font-size:12px;text-align:center;padding:8px;">No expenses today</div>';
+  } else {
+    todayBizExp.forEach(e=>{const d=document.createElement('div');d.style.cssText='display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0f2744;font-size:12px;';d.innerHTML=`<span style="color:#94a3b8;">${esc(e.desc)} <span style="color:#475569;font-size:10px;">${esc(e.cat||'')}</span></span><span style="color:#ef4444;font-family:'Rajdhani',sans-serif;">Br ${e.amt.toLocaleString()}</span>`;el.appendChild(d);});
+  }
   const rl=document.getElementById('saved-reps');rl.innerHTML='';
   const allDates=[...new Set([...Object.keys(savedReps),todayKey()])].sort().reverse();
   if(!allDates.length){rl.innerHTML='<div style="color:#334155;font-size:13px;">No saved reports yet.</div>';return;}
   allDates.forEach(d=>{const r=savedReps[d]||{carCount:0,rugCount:0,totalSales:0,totalExpenses:0};const div=document.createElement('div');div.style.cssText='cursor:pointer;background:#020d1a;border:1px solid #1e3a5f;border-radius:10px;padding:10px 14px;margin-bottom:8px;';div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-family:'Rajdhani',sans-serif;font-size:13px;color:#a855f7;">${fmtDate(d)}</div><div style="font-size:11px;color:#475569;">Cars:${r.carCount} · Rugs:${r.rugCount}</div></div><div style="text-align:right;"><div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#22c55e;">Br ${(r.totalSales||0).toLocaleString()}</div><div style="font-size:11px;color:#ef4444;">-Br ${(r.totalExpenses||0).toLocaleString()}</div></div></div>`;div.onclick=()=>showRepDetail(r);rl.appendChild(div);});
 }
 function saveReport(){
-  const dk=todayKey(),dayO=orders.filter(o=>o.dateKey===dk),dayR=rugs.filter(r=>r.dateKey===dk),dayE=expenses[dk]||[];
-  const cs=dayO.reduce((a,o)=>a+o.totalPrice,0),rs=dayR.reduce((a,r)=>a+r.totalPrice,0),te=dayE.reduce((a,e)=>a+e.amount,0);
-  const r={dateKey:dk,carCount:dayO.length,rugCount:dayR.length,carSales:cs,rugSales:rs,totalSales:cs+rs,expenses:dayE,totalExpenses:te,net:(cs+rs)-te};
+  const dk=todayKey(),dayO=orders.filter(o=>o.dateKey===dk),dayR=rugs.filter(r=>r.dateKey===dk);
+  const todayBizExp=bizExpenses.filter(e=>e.dateKey===dk);
+  const cs=dayO.reduce((a,o)=>a+o.totalPrice,0),rs=dayR.reduce((a,r)=>a+r.totalPrice,0);
+  const te=todayBizExp.reduce((a,e)=>a+e.amt,0);
+  const expForReport=todayBizExp.map(e=>({label:e.desc,amount:e.amt,time:e.date||''}));
+  const r={dateKey:dk,carCount:dayO.length,rugCount:dayR.length,carSales:cs,rugSales:rs,totalSales:cs+rs,expenses:expForReport,totalExpenses:te,net:(cs+rs)-te};
   savedReps[dk]=r;LS.s('as_reports',savedReps);
-  sendSMS(settings.ownerPhone,`[AutoSpa Daily ${fmtDate(dk)}] Cars:${r.carCount}|Rugs:${r.rugCount}|Sales:P${r.totalSales.toLocaleString()}|Exp:P${r.totalExpenses.toLocaleString()}|NET:P${r.net.toLocaleString()}`);
+  sendSMS(settings.ownerPhone,`[AutoSpa Daily ${fmtDate(dk)}] Cars:${r.carCount}|Rugs:${r.rugCount}|Sales:Br ${r.totalSales.toLocaleString()}|Exp:Br ${r.totalExpenses.toLocaleString()}|NET:Br ${r.net.toLocaleString()}`);
   renderReports();toast('📊 Report saved!');
 }
-function addExpense(){
-  const l=document.getElementById('expl').value.trim(),a=parseFloat(document.getElementById('expa').value)||0;
-  if(!l||!a){toast('Enter description and amount','er');return;}
-  const dk=todayKey();if(!expenses[dk])expenses[dk]=[];
-  expenses[dk].push({label:l,amount:a,time:new Date().toLocaleTimeString('en-ET')});
-  LS.s('as_expenses',expenses);document.getElementById('expl').value='';document.getElementById('expa').value='';
-  renderReports();toast('Expense recorded');
-}
+function addExpense(){ /* removed — use Expenses tab */ }
 function showRepDetail(r){
   let h=`<div style="font-family:'Rajdhani',sans-serif;font-size:18px;color:#a855f7;margin-bottom:12px;">📊 ${fmtDate(r.dateKey)}</div>`;
   [['Cars Washed',r.carCount,'#00d4ff'],['Rugs Washed',r.rugCount,'#f97316'],['Car Sales','Br '+(r.carSales||0).toLocaleString(),'#22c55e'],['Rug Sales','Br '+(r.rugSales||0).toLocaleString(),'#f97316'],['Total Sales','Br '+(r.totalSales||0).toLocaleString(),'#22c55e'],['Expenses','Br '+(r.totalExpenses||0).toLocaleString(),'#ef4444'],['Net Income','Br '+(r.net||0).toLocaleString(),'#a855f7']].forEach(([k,v,c])=>{h+=`<div class="tr2"><span class="tk">${k}</span><span style="font-family:'Rajdhani',sans-serif;color:${c};font-size:16px;">${v}</span></div>`;});
@@ -1541,8 +1541,11 @@ function removeWasher(id){
   if(ciSelectedWasher&&ciSelectedWasher.id===id){ciSelectedWasher=null;updateCheckinWasherBadge();}
   renderWasherManageList();renderCheckinWasherGrid();toast('Washer removed','er');
 }
+let assignType='order'; // 'order' or 'rug'
+
 function openAssignModal(ticketNo){
-  if(!washers.length){toast('Add washers in the Washers tab first','er');return;}
+  if(!washers.length){toast('Add washers in the Staff tab first','er');return;}
+  assignType='order';
   assignTarget=ticketNo;assignSelectedWasher=null;
   const order=orders.find(o=>o.ticketNo===ticketNo);
   document.getElementById('assign-ticket-label').textContent='Ticket: '+ticketNo+' — '+(order?order.name+' · '+order.plate:'');
@@ -1563,12 +1566,44 @@ function openAssignModal(ticketNo){
   });
   document.getElementById('assign-modal').classList.add('show');
 }
+
+function openAssignRugModal(ticketNo){
+  if(!washers.length){toast('Add washers in the Staff tab first','er');return;}
+  assignType='rug';
+  assignTarget=ticketNo;assignSelectedWasher=null;
+  const rug=rugs.find(r=>r.ticketNo===ticketNo);
+  document.getElementById('assign-ticket-label').textContent='Rug Ticket: '+ticketNo+' — '+(rug?rug.ownerName:'');
+  const cur=document.getElementById('assign-current');
+  if(rug&&rug.washerName){cur.style.display='block';cur.textContent='Currently assigned: 👷 '+rug.washerName;}else{cur.style.display='none';}
+  const opts=document.getElementById('assign-washer-options');opts.innerHTML='';
+  washers.forEach(w=>{
+    const btn=document.createElement('button');
+    const isCur=rug&&rug.washerId===w.id;
+    btn.style.cssText=`width:100%;padding:12px 14px;background:${isCur?'#0a2020':'#020d1a'};border:1px solid ${isCur?'#22d3ee':'#1e3a5f'};border-radius:10px;color:${isCur?'#22d3ee':'#e2e8f0'};font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;transition:all 0.15s;`;
+    btn.innerHTML=`<span>${isCur?'✅ ':''}<strong>${esc(w.name)}</strong></span>`;
+    btn.onclick=()=>{
+      assignSelectedWasher=w;
+      opts.querySelectorAll('button').forEach(b=>{b.style.background='#020d1a';b.style.borderColor='#1e3a5f';b.style.color='#e2e8f0';});
+      btn.style.background='#0a2020';btn.style.borderColor='#22d3ee';btn.style.color='#22d3ee';
+    };
+    opts.appendChild(btn);
+  });
+  document.getElementById('assign-modal').classList.add('show');
+}
+
 function confirmAssign(){
   if(!assignTarget||!assignSelectedWasher){toast('Select a washer first','er');return;}
-  orders=orders.map(o=>o.ticketNo===assignTarget?{...o,washerId:assignSelectedWasher.id,washerName:assignSelectedWasher.name}:o);
-  LS.s('as_orders',orders);
-  closeM('assign-modal');
-  renderOrders();
+  if(assignType==='rug'){
+    rugs=rugs.map(r=>r.ticketNo===assignTarget?{...r,washerId:assignSelectedWasher.id,washerName:assignSelectedWasher.name}:r);
+    LS.s('as_rugs',rugs);
+    closeM('assign-modal');
+    renderRugs();
+  } else {
+    orders=orders.map(o=>o.ticketNo===assignTarget?{...o,washerId:assignSelectedWasher.id,washerName:assignSelectedWasher.name}:o);
+    LS.s('as_orders',orders);
+    closeM('assign-modal');
+    renderOrders();
+  }
   toast('✅ Assigned to '+assignSelectedWasher.name);
 }
 function renderWashersPage(){}  // alias kept for safety
@@ -2017,6 +2052,7 @@ function addBusinessExpense(){
   document.getElementById('exp-desc').value='';
   document.getElementById('exp-amt').value='';
   renderExpensesPage();
+  renderReports();
   toast('✅ Expense added');
 }
 function renderExpensesPage(){
