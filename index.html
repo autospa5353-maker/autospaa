@@ -11,6 +11,7 @@
 <title>AutoSpa Car Wash</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Exo+2:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 
 <!-- PWA Manifest inline -->
 <script>
@@ -206,7 +207,7 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
       <div class="g2">
         <div class="fld"><label class="lbl">Customer Name *</label><input id="ci-name" placeholder="Abebe Bekele" oninput="lookupCustomer()"/></div>
         <div class="fld"><label class="lbl">Vehicle *</label><input id="ci-car" placeholder="Toyota Corolla 2018"/></div>
-        <div class="fld"><label class="lbl">Phone *</label><input id="ci-phone" type="tel" placeholder="+251 9XX XXX XXX" oninput="lookupCustomer()"/></div>
+        <div class="fld"><label class="lbl">Phone *</label><div style="display:flex;align-items:center;background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;overflow:hidden;"><span style="padding:9px 10px;color:#00d4ff;font-family:'Rajdhani',sans-serif;font-size:13px;white-space:nowrap;border-right:1px solid #1e3a5f;user-select:none;">+251</span><input id="ci-phone" type="tel" placeholder="9XX XXX XXX" oninput="lookupCustomer()" style="border:none;border-radius:0;flex:1;background:transparent;"/></div></div>
         <div class="fld"><label class="lbl">Plate *</label><input id="ci-plate" placeholder="AA 12345" style="font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:15px;" oninput="this.value=this.value.toUpperCase()"/></div>
       </div>
       <div class="ibox"><span style="color:#64748b;font-size:11px;">🕐 Time In:</span><span style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#00d4ff;" id="ci-ts"></span></div>
@@ -294,7 +295,12 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
 
   <!-- ORDERS -->
   <div class="page" id="page-orders">
-    <input id="ord-search" placeholder="🔍 Search name, plate, ticket…" oninput="renderOrders()" style="margin-bottom:14px;"/>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+      <input id="ord-search" placeholder="🔍 Search name, plate, ticket…" oninput="renderOrders()" style="flex:1;margin-bottom:0;"/>
+      <input type="date" id="ord-date" onchange="renderOrders()" style="font-size:11px;padding:9px 8px;background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e2e8f0;width:auto;"/>
+      <button onclick="clearOrdDate()" id="ord-date-clr" style="display:none;background:transparent;border:1px solid #475569;border-radius:8px;color:#475569;font-size:16px;padding:6px 9px;cursor:pointer;">✕</button>
+    </div>
+    <div id="ord-date-label" style="font-size:11px;color:#00d4ff;margin-bottom:10px;display:none;"></div>
     <div id="orders-list"></div>
   </div>
 
@@ -309,7 +315,7 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
       <div class="card">
         <div class="ct or">🪣 Rug / Carpet Info</div>
         <div class="fld"><label class="lbl">Owner Name *</label><input id="rn" placeholder="Tigist Haile"/></div>
-        <div class="fld"><label class="lbl">Phone *</label><input id="rp" type="tel" placeholder="+251 9XX XXX XXX"/></div>
+        <div class="fld"><label class="lbl">Phone *</label><div style="display:flex;align-items:center;background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;overflow:hidden;"><span style="padding:9px 10px;color:#f97316;font-family:'Rajdhani',sans-serif;font-size:13px;white-space:nowrap;border-right:1px solid #1e3a5f;user-select:none;">+251</span><input id="rp" type="tel" placeholder="9XX XXX XXX" style="border:none;border-radius:0;flex:1;background:transparent;"/></div></div>
         <div class="fld"><label class="lbl">Description</label><input id="rd" placeholder="e.g. Living room carpet"/></div>
         <div class="ibox"><span style="color:#64748b;font-size:11px;">🕐 Time In:</span><span style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#f97316;" id="rug-ts"></span></div>
       </div>
@@ -340,13 +346,26 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
     </div>
     <div class="sp2" id="rug-list">
       <button class="btn-p" style="background:linear-gradient(135deg,#0f2744,#1e3a5f);border:1px solid #00d4ff44;color:#00d4ff;font-size:13px;padding:11px;margin-bottom:12px;" onclick="openScan()">📷 SCAN QR TO RELEASE RUG</button>
-      <input id="rug-search" placeholder="🔍 Search name or ticket…" oninput="renderRugs()" style="margin-bottom:14px;"/>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+        <input id="rug-search" placeholder="🔍 Search name or ticket…" oninput="renderRugs()" style="flex:1;margin-bottom:0;"/>
+        <input type="date" id="rug-date" onchange="renderRugs()" style="font-size:11px;padding:9px 8px;background:#020d1a;border:1px solid #f9731644;border-radius:8px;color:#e2e8f0;width:auto;"/>
+        <button onclick="clearRugDate()" id="rug-date-clr" style="display:none;background:transparent;border:1px solid #475569;border-radius:8px;color:#475569;font-size:16px;padding:6px 9px;cursor:pointer;">✕</button>
+      </div>
+      <div id="rug-date-label" style="font-size:11px;color:#f97316;margin-bottom:10px;display:none;"></div>
       <div id="rugs-list"></div>
     </div>
   </div>
 
   <!-- REPORTS -->
   <div class="page" id="page-reports">
+    <!-- Sub-tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;">
+      <button id="rtab-summary" onclick="switchReportTab('summary')" style="flex-shrink:0;padding:8px 14px;border-radius:8px;border:1px solid #22c55e;background:#052e16;color:#22c55e;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">📊 Summary</button>
+      <button id="rtab-bi"      onclick="switchReportTab('bi')"      style="flex-shrink:0;padding:8px 14px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">📈 Analytics</button>
+      <button id="rtab-loyalty" onclick="switchReportTab('loyalty')" style="flex-shrink:0;padding:8px 14px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">🌟 Loyalty</button>
+    </div>
+    <!-- Summary tab content wrapper -->
+    <div id="rtab-content-summary">
     <div class="card">
       <div class="ct gn">📊 Today's Summary</div>
       <div class="sw2">
@@ -360,6 +379,27 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
       <button class="btn-p" style="font-size:13px;padding:11px;margin-bottom:10px;background:linear-gradient(135deg,#1d4ed8,#2563eb);" onclick="emailReport()">📧 Email Report to Owner</button>
       <button class="btn-p" style="font-size:13px;padding:11px;background:linear-gradient(135deg,#14532d,#15803d);" onclick="openExpModal()">📤 Export / Backup Data</button>
     </div>
+
+    <!-- DATE JOB VIEWER -->
+    <div class="card">
+      <div class="ct" style="color:#00d4ff;">📅 View Jobs by Date</div>
+      <div style="font-size:11px;color:#475569;margin-bottom:12px;">Pick a date to see exactly what was done that day.</div>
+      <div class="fld">
+        <label class="lbl">Select Date</label>
+        <input type="date" id="djv-date" onchange="renderDateJobViewer()" style="font-size:13px;"/>
+      </div>
+      <!-- Filter buttons -->
+      <div style="display:flex;gap:6px;margin-bottom:14px;">
+        <button id="djv-btn-all" onclick="setDjvMode('all')" style="flex:1;padding:9px 4px;border-radius:8px;border:1px solid #00d4ff;background:#0a1628;color:#00d4ff;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;letter-spacing:1px;">ALL JOBS</button>
+        <button id="djv-btn-cars" onclick="setDjvMode('cars')" style="flex:1;padding:9px 4px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;letter-spacing:1px;">🚗 CARS</button>
+        <button id="djv-btn-rugs" onclick="setDjvMode('rugs')" style="flex:1;padding:9px 4px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;letter-spacing:1px;">🪣 RUGS</button>
+      </div>
+      <!-- Summary strip -->
+      <div id="djv-summary" style="display:none;display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;"></div>
+      <!-- Results -->
+      <div id="djv-results"><div style="color:#334155;font-size:12px;text-align:center;padding:20px 0;">Pick a date above to see jobs.</div></div>
+    </div>
+
     <div class="card">
       <div class="ct rd">💸 Today's Expenses</div>
       <div style="font-size:11px;color:#475569;margin-bottom:8px;">Add expenses in the <strong style="color:#ef4444;">Expenses tab</strong> →</div>
@@ -369,6 +409,25 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
       <div class="ct pu">📁 Saved Reports</div>
       <div id="saved-reps"><div style="color:#334155;font-size:13px;">No saved reports yet.</div></div>
     </div>
+    </div><!-- end summary tab -->
+
+    <!-- Analytics tab -->
+    <div id="rtab-content-bi" style="display:none;">
+      <div class="card">
+        <div class="ct" style="color:#22c55e;">📈 Business Analytics</div>
+        <div id="bi-content"></div>
+      </div>
+    </div>
+
+    <!-- Loyalty tab -->
+    <div id="rtab-content-loyalty" style="display:none;">
+      <div class="card">
+        <div class="ct" style="color:#f59e0b;">🌟 Customer Loyalty</div>
+        <div style="font-size:11px;color:#475569;margin-bottom:10px;">1 point per visit (car wash or rug). Tiers: Bronze → Silver (10 visits) → Gold (25 visits) → Diamond (60 visits)</div>
+        <input id="loyalty-search" placeholder="🔍 Search by name, phone or plate…" oninput="renderLoyaltyPage()" style="margin-bottom:12px;"/>
+        <div id="loyalty-list"></div>
+      </div>
+    </div>
   </div>
 
   <!-- SETTINGS -->
@@ -376,7 +435,7 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
     <div class="card">
       <div class="ct go">⚙️ Business Info</div>
       <div class="fld"><label class="lbl">Business Name</label><input id="set-biz" placeholder="AutoSpa Car Wash & Detailing"/></div>
-      <div class="fld"><label class="lbl">Owner Phone Number</label><input id="set-ph" type="tel" placeholder="+251 9XX XXX XXX"/></div>
+      <div class="fld"><label class="lbl">Owner Phone Number</label><div style="display:flex;align-items:center;background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;overflow:hidden;"><span style="padding:9px 10px;color:#f59e0b;font-family:'Rajdhani',sans-serif;font-size:13px;white-space:nowrap;border-right:1px solid #1e3a5f;user-select:none;">+251</span><input id="set-ph" type="tel" placeholder="9XX XXX XXX" style="border:none;border-radius:0;flex:1;background:transparent;"/></div></div>
       <div class="fld"><label class="lbl">Owner Email Address</label><input id="set-em" type="email" placeholder="owner@gmail.com"/></div>
       <button class="btn-p" style="margin-top:4px;" onclick="saveSettings()">💾 Save Business Info</button>
     </div>
@@ -457,14 +516,44 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
     </div>
 
     <div class="card">
+      <div class="ct" style="color:#22c55e;">🧼 Services &amp; Pricing</div>
+      <div style="font-size:11px;color:#475569;margin-bottom:12px;line-height:1.7;">Add, edit, or delete services shown on the Check-In screen. These are your real prices — remove any samples and add your own.</div>
+      <div id="settings-svc-list" style="margin-bottom:12px;"></div>
+      <div style="font-size:10px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">➕ Add New Service</div>
+      <div class="g2">
+        <div class="fld"><label class="lbl">Service Name</label><input id="set-csn" placeholder="e.g. Full Detailing"/></div>
+        <div class="fld"><label class="lbl">Price (Birr)</label><input id="set-csp" type="number" placeholder="e.g. 500"/></div>
+      </div>
+      <button class="btn-a" style="width:100%;border-color:#22c55e44;color:#22c55e;padding:10px;" onclick="addSvcFromSettings()">+ Add Service</button>
+    </div>
+
+    <div class="card">
       <div class="ct" style="color:#22d3ee;">👷 Staff Team</div>
-      <div style="font-size:11px;color:#475569;margin-bottom:10px;">Each worker must register a reference signature once. At clock-in their drawn signature is compared against it — must match ≥50% to be accepted.</div>
+      <div style="font-size:11px;color:#475569;margin-bottom:12px;">Each worker must register a reference signature once. At clock-in their drawn signature is compared against it — must match ≥37% to be accepted.</div>
+
+      <!-- Naol row -->
+      <div style="background:#020d1a;border:1px solid #a855f733;border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#e2e8f0;">Naol</div>
+            <div style="font-size:10px;color:#a855f7;">👔 Customer Management · Fixed salary</div>
+          </div>
+          <button onclick="openRefSigModal('NAOL')" style="padding:5px 10px;background:#1a0a2a;border:1px solid #a855f744;color:#a855f7;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;">
+            ✍️ ${LS.g('as_naol_refsig',null)?'Update':'Register'} Signature
+          </button>
+        </div>
+        <div class="fld" style="margin-bottom:0;">
+          <label class="lbl">Naol's Phone Number</label>
+          <div style="display:flex;gap:8px;"><div style="display:flex;align-items:center;background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;overflow:hidden;flex:1;"><span style="padding:9px 10px;color:#a855f7;font-family:'Rajdhani',sans-serif;font-size:13px;white-space:nowrap;border-right:1px solid #1e3a5f;user-select:none;">+251</span><input id="naol-phone-inp" type="tel" placeholder="9XX XXX XXX" value="" style="border:none;border-radius:0;flex:1;background:transparent;"/></div><button onclick="saveNaolPhone()" style="padding:8px 14px;background:#1a0a2a;border:1px solid #a855f744;color:#a855f7;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap;">Save</button></div>
+        </div>
+      </div>
+
       <div id="washer-list-manage"></div>
       <div style="margin-top:12px;border-top:1px solid #0f2744;padding-top:12px;">
         <div style="font-size:11px;color:#22d3ee;margin-bottom:8px;letter-spacing:1px;">➕ ADD NEW WASHER</div>
         <div class="fld"><label class="lbl">Full Name *</label><input id="new-washer-name" placeholder="e.g. Dawit Bekele"/></div>
         <div class="g2">
-          <div class="fld"><label class="lbl">Phone *</label><input id="new-washer-phone" type="tel" placeholder="+251 9XX XXX XXX"/></div>
+          <div class="fld"><label class="lbl">Phone *</label><div style="display:flex;align-items:center;background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;overflow:hidden;"><span style="padding:9px 10px;color:#22d3ee;font-family:'Rajdhani',sans-serif;font-size:13px;white-space:nowrap;border-right:1px solid #1e3a5f;user-select:none;">+251</span><input id="new-washer-phone" type="tel" placeholder="9XX XXX XXX" style="border:none;border-radius:0;flex:1;background:transparent;"/></div></div>
         </div>
         <button class="btn-a" style="border-color:#22d3ee44;color:#22d3ee;width:100%;padding:10px;" onclick="addWasher()">+ Add Washer</button>
       </div>
@@ -473,6 +562,13 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
 
   <!-- STAFF PAGE -->
   <div class="page" id="page-washers">
+    <!-- Staff sub-tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;">
+      <button id="stftab-work"   onclick="switchStaffTab('work')"   style="flex-shrink:0;padding:8px 12px;border-radius:8px;border:1px solid #22d3ee;background:#0a1628;color:#22d3ee;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">⏱️ Work</button>
+      <button id="stftab-perf"   onclick="switchStaffTab('perf')"   style="flex-shrink:0;padding:8px 12px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">⭐ Performance</button>
+      <button id="stftab-shifts" onclick="switchStaffTab('shifts')" style="flex-shrink:0;padding:8px 12px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">📅 Shifts</button>
+    </div>
+    <div id="stftab-content-work">
     <!-- Clock-In Panel -->
     <div class="card" style="border-color:#22d3ee33;">
       <div class="ct" style="color:#22d3ee;margin-bottom:8px;">⏱️ Clock-In</div>
@@ -491,6 +587,7 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
         <button onclick="openLoanModal('NAOL')" style="flex:1;padding:8px;background:#1c1008;border:1px solid #f9731655;color:#f97316;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">💰 Loan</button>
         <button onclick="openBonusModal('NAOL')" style="flex:1;padding:8px;background:#052e16;border:1px solid #22c55e55;color:#22c55e;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">🎁 Bonus</button>
+        <button onclick="openDeductModal('NAOL','Naol')" style="flex:1;padding:8px;background:#450a0a;border:1px solid #ef444455;color:#ef4444;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">✂️ Deduct</button>
         <button onclick="sendWeeklyReport('NAOL')" style="flex:1;padding:8px;background:#0a0a2a;border:1px solid #6366f155;color:#818cf8;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">📨 Report</button>
       </div>
     </div>
@@ -499,6 +596,25 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;margin-top:4px;">
       <div style="font-size:10px;color:#475569;">To add/remove staff → ⚙️ Settings</div>
       <div style="font-size:10px;color:#475569;" id="week-range-label"></div>
+    </div>
+    </div><!-- end stftab-content-work -->
+
+    <!-- Performance tab -->
+    <div id="stftab-content-perf" style="display:none;">
+      <div class="card">
+        <div class="ct" style="color:#f59e0b;">⭐ Washer Performance Scores</div>
+        <div style="font-size:11px;color:#475569;margin-bottom:12px;">Score starts at 100. −5 per deduction, −2 per absent day, +3 per bonus. Updates live.</div>
+        <div id="perf-list"></div>
+      </div>
+    </div>
+
+    <!-- Shifts tab -->
+    <div id="stftab-content-shifts" style="display:none;">
+      <div class="card">
+        <div class="ct" style="color:#a855f7;">📅 Weekly Shift Schedule</div>
+        <div style="font-size:11px;color:#475569;margin-bottom:12px;">Set which days each worker is scheduled. Default is all days on.</div>
+        <div id="shift-grid"></div>
+      </div>
     </div>
   </div>
 
@@ -524,13 +640,17 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
     </div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div class="ct rd" style="margin-bottom:0;">📋 All Expenses</div>
-        <select id="exp-filter" onchange="renderExpensesPage()" style="width:auto;font-size:11px;padding:4px 8px;">
-          <option value="today">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="all">All Time</option>
-        </select>
+        <div class="ct rd" style="margin-bottom:0;" id="exp-page-title">📋 All Expenses</div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+          <select id="exp-filter" onchange="onExpFilterChange()" style="width:auto;font-size:11px;padding:4px 8px;">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="all">All Time</option>
+            <option value="date">📅 Pick Date</option>
+          </select>
+          <input type="date" id="exp-date-pick" onchange="renderExpensesPage()" style="display:none;font-size:11px;padding:4px 8px;background:#020d1a;border:1px solid #ef444455;border-radius:8px;color:#e2e8f0;"/>
+        </div>
       </div>
       <div id="exp-summary" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;"></div>
       <div id="exp-list-page"></div>
@@ -573,13 +693,34 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
 </div>
 
 <div class="overlay" id="scan-modal">
-  <div class="modal" style="max-width:380px;text-align:center;">
-    <div class="mt" style="color:#00d4ff;font-size:18px;">📷 SCAN QR TICKET</div>
-    <div style="color:#64748b;font-size:12px;margin-bottom:12px;">Point camera at QR code, then type ticket number below</div>
-    <div style="position:relative;border-radius:12px;overflow:hidden;background:#000;margin-bottom:12px;"><video id="scan-vid" autoplay playsinline muted style="width:100%;max-height:220px;display:block;object-fit:cover;"></video><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;"><div style="width:160px;height:160px;border:2px solid #00d4ff;border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,0.45);"></div></div></div>
-    <div style="color:#475569;font-size:11px;margin-bottom:8px;">Enter ticket number manually:</div>
-    <div class="add-row"><input id="scan-in" placeholder="e.g. RUG-K3M7X12" style="flex:1;font-family:'Rajdhani',sans-serif;letter-spacing:2px;text-align:center;text-transform:uppercase;" onkeydown="if(event.keyCode===13)doScan()    "/><button class="btn-a" style="padding:8px 16px;font-size:14px;" onclick="doScan()">GO</button></div>
-    <button style="width:100%;margin-top:12px;padding:11px;background:transparent;border:1px solid #1e3a5f;color:#64748b;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;" onclick="closeScan()">Cancel</button>
+  <div class="modal" style="max-width:390px;">
+    <div style="text-align:center;margin-bottom:14px;">
+      <div class="mt" style="color:#00d4ff;font-size:18px;">🪣 FIND RUG</div>
+      <div style="color:#64748b;font-size:12px;">Choose how to look up the rug</div>
+    </div>
+    <!-- Tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:14px;">
+      <button id="stab-qr"  onclick="switchScanTab('qr')"     style="flex:1;padding:9px 4px;border-radius:8px;border:1px solid #00d4ff;background:#0a1628;color:#00d4ff;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">📷 Scan QR</button>
+      <button id="stab-tk"  onclick="switchScanTab('tk')"     style="flex:1;padding:9px 4px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">🎫 Ticket #</button>
+      <button id="stab-sr"  onclick="switchScanTab('sr')"     style="flex:1;padding:9px 4px;border-radius:8px;border:1px solid #1e3a5f;background:#020d1a;color:#475569;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">🔍 Search</button>
+    </div>
+    <!-- QR tab -->
+    <div id="scan-tab-qr">
+      <div style="position:relative;border-radius:12px;overflow:hidden;background:#000;margin-bottom:12px;"><video id="scan-vid" autoplay playsinline muted style="width:100%;max-height:220px;display:block;object-fit:cover;"></video><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;"><div style="width:160px;height:160px;border:2px solid #00d4ff;border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,0.45);"></div></div></div>
+      <div style="color:#475569;font-size:11px;text-align:center;">Point camera at the QR code on the ticket</div>
+    </div>
+    <!-- Ticket # tab -->
+    <div id="scan-tab-tk" style="display:none;">
+      <div style="color:#64748b;font-size:12px;margin-bottom:10px;text-align:center;">Enter the ticket number printed on the receipt</div>
+      <div class="add-row"><input id="scan-in" placeholder="e.g. RUG-K3M7X" style="flex:1;font-family:'Rajdhani',sans-serif;letter-spacing:2px;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.keyCode===13)doScan()"/><button class="btn-a" style="padding:10px 16px;font-size:14px;" onclick="doScan()">GO</button></div>
+    </div>
+    <!-- Search tab -->
+    <div id="scan-tab-sr" style="display:none;">
+      <div style="color:#64748b;font-size:12px;margin-bottom:10px;text-align:center;">Search by customer name or phone number</div>
+      <input id="scan-search" placeholder="Type name or phone…" oninput="doScanSearch()" style="margin-bottom:10px;"/>
+      <div id="scan-search-results" style="max-height:240px;overflow-y:auto;"></div>
+    </div>
+    <button style="width:100%;margin-top:14px;padding:11px;background:transparent;border:1px solid #1e3a5f;color:#64748b;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;" onclick="closeScan()">Cancel</button>
   </div>
 </div>
 
@@ -589,14 +730,41 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
 
 <div class="overlay" id="release-modal">
   <div class="modal">
-    <div style="text-align:center;margin-bottom:14px;"><div class="mt" style="color:#22c55e;">✅ RUG RELEASE</div><div style="color:#64748b;font-size:12px;">Customer claiming their rug</div></div>
+    <div style="text-align:center;margin-bottom:14px;">
+      <div style="font-size:30px;margin-bottom:4px;">🪣✅</div>
+      <div class="mt" style="color:#22c55e;">RUG RELEASE</div>
+      <div style="color:#64748b;font-size:12px;">Customer is claiming their rug</div>
+    </div>
     <div id="rel-info"></div>
     <div class="dec" id="rel-dec"></div>
-    <div style="margin-bottom:14px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><label class="lbl">Customer Signature (required)</label><button class="btn-cl" onclick="clrSig('release')">✕ Clear</button></div>
-      <div class="sw"><canvas class="sig" id="sig-release" height="120"></canvas><div class="sh" id="hint-release">Sign here…</div></div>
+    <div style="background:#020d1a;border:1px solid #22c55e33;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <label class="lbl" style="color:#22c55e;">✍️ Customer Signature <span style="color:#ef4444;">*required</span></label>
+        <button class="btn-cl" onclick="clrSig('release')">✕ Clear</button>
+      </div>
+      <div style="font-size:11px;color:#475569;margin-bottom:8px;">Customer must sign below to confirm receipt of their rug in good condition.</div>
+      <div class="sw sig-tap-box"><canvas class="sig" id="sig-release" height="140"></canvas><div class="sh" id="hint-release">👆 Customer signs here</div></div>
     </div>
-    <div style="display:flex;gap:10px;"><button class="btn-p" style="flex:2;padding:12px;font-size:14px;" onclick="confirmRelease()">✅ Confirm Release</button><button style="flex:1;padding:12px;background:transparent;border:1px solid #1e3a5f;color:#64748b;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;" onclick="closeM('release-modal')">Cancel</button></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-p" style="flex:2;padding:13px;font-size:15px;background:linear-gradient(135deg,#15803d,#16a34a);" onclick="confirmRelease()">✅ CONFIRM & RELEASE</button>
+      <button style="flex:1;padding:12px;background:transparent;border:1px solid #1e3a5f;color:#64748b;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;" onclick="closeM('release-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- RELEASE RECEIPT MODAL -->
+<div class="overlay" id="release-receipt-modal">
+  <div class="modal" style="max-width:400px;">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:36px;margin-bottom:4px;">🎉</div>
+      <div class="mt" style="color:#22c55e;font-size:22px;">RUG RELEASED!</div>
+      <div style="font-size:12px;color:#475569;">Handover complete — receipt below</div>
+    </div>
+    <div id="receipt-body"></div>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button class="btn-p" style="flex:1;padding:12px;font-size:14px;background:linear-gradient(135deg,#1d4ed8,#2563eb);" onclick="printReleaseReceipt()">🖨️ Print Receipt</button>
+      <button style="flex:1;padding:12px;background:transparent;border:1px solid #22c55e;color:#22c55e;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:13px;" onclick="closeM('release-receipt-modal')">Done</button>
+    </div>
   </div>
 </div>
 
@@ -618,19 +786,49 @@ select.ss{background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;color:#e
 </div>
 
 <script>
+/* ══ TAB SWITCHERS ══ */
+function switchReportTab(tab){
+  ['summary','bi','loyalty'].forEach(t=>{
+    const btn=document.getElementById('rtab-'+t);
+    const panel=document.getElementById('rtab-content-'+t);
+    const active=t===tab;
+    if(btn){btn.style.borderColor=active?'#22c55e':'#1e3a5f';btn.style.background=active?'#052e16':'#020d1a';btn.style.color=active?'#22c55e':'#475569';}
+    if(panel)panel.style.display=active?'block':'none';
+  });
+  if(tab==='bi')renderBIPage();
+  if(tab==='loyalty')renderLoyaltyPage();
+}
+function switchStaffTab(tab){
+  ['work','perf','shifts'].forEach(t=>{
+    const btn=document.getElementById('stftab-'+t);
+    const panel=document.getElementById('stftab-content-'+t);
+    const active=t===tab;
+    const colors={work:'#22d3ee',perf:'#f59e0b',shifts:'#a855f7'};
+    const c=colors[t];
+    if(btn){btn.style.borderColor=active?c:'#1e3a5f';btn.style.background=active?c+'22':'#020d1a';btn.style.color=active?c:'#475569';}
+    if(panel)panel.style.display=active?'block':'none';
+  });
+  if(tab==='perf')renderPerformancePage();
+  if(tab==='shifts')renderShiftPage();
+}
 /* ══ STORAGE ══ */
 const LS={g:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 let orders=LS.g('as_orders',[]),rugs=LS.g('as_rugs',[]),expenses=LS.g('as_expenses',{}),savedReps=LS.g('as_reports',{}),customSvcs=LS.g('as_csvc',[]);
 let washers=LS.g('as_washers',[]);
 let staffLoans=LS.g('as_loans',{});      // {workerId:[{id,amt,reason,due,paid,paidDate}]}
 let staffBonuses=LS.g('as_bonuses',{});  // {workerId:[{id,amt,reason,date,weekKey}]}
+let salaryPayments=LS.g('as_salary_payments',{});
+let staffDeductions=LS.g('as_deductions',{});
+let staffShifts=LS.g('as_shifts',{});        // {washerId: {mon:true,tue:false,...}}
+let loyaltyData=LS.g('as_loyalty',{});       // {phone: {name,visits,carVisits,rugVisits,totalSpent,points}}
 let attendance=LS.g('as_attend',{});     // {dateKey:{workerId:{in:timeStr,late:mins,absent:bool}}}
 let bizExpenses=LS.g('as_bizexp',[]);    // [{id,desc,amt,cat,date,dateKey,auto:bool}]
 let assignTarget=null,assignSelectedWasher=null;
-let clockinTarget=null,loanTarget=null,bonusTarget=null;
+let clockinTarget=null,loanTarget=null,bonusTarget=null,deductTarget=null,paySalaryTarget=null;
 let settings=LS.g('as_settings',{ownerPhone:'+251 9XX XXX XXX',ownerEmail:'',bizName:'AutoSpa Car Wash & Detailing',ejsSvc:'',ejsTpl:'',ejsKey:''});
 
-const BSVCS=[{id:'basic',label:'Basic Wash',price:200},{id:'engine',label:'Engine Hood Wash',price:350},{id:'undercarriage',label:'Under Carriage Wash',price:400},{id:'polish',label:'Polish',price:800},{id:'detailing',label:'Full Detailing',price:1500}];
+const BSVCS=[];  // Built-in services removed — all services managed in Settings
+// On first run, customSvcs starts empty so owner sets their real prices
 const ISUGG=['Dashcam','Sunglasses','Umbrella','Laptop bag','Phone charger','Bag','Wallet','Keys (spare)','Documents','Water bottle'];
 const SCLR={Waiting:'#f59e0b','In Progress':'#3b82f6',Done:'#22c55e',Released:'#a855f7'};
 let ciSvcs=[],ciExtras=[],ciItems=[],rugPaid=false,rugPh=null,relTarget=null,scanStream=null,curCarTk=null,curRugTk=null;
@@ -679,7 +877,7 @@ function gotoTab(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
-  if(name==='orders')renderOrders();if(name==='rugs')renderRugs();if(name==='reports')renderReports();if(name==='washers')renderStaffPage();if(name==='expenses')renderExpensesPage();if(name==='checkin')renderCheckinWasherGrid();
+  if(name==='orders')renderOrders();if(name==='rugs'){renderRugs();renderRugCheckinWasherGrid();updateRugCheckinWasherBadge();}if(name==='reports'){renderReports();switchReportTab('summary');const djvD=document.getElementById('djv-date');if(djvD&&!djvD.value){djvD.value=todayKey();setDjvMode('all');}else renderDateJobViewer();}if(name==='washers'){renderStaffPage();switchStaffTab('work');}if(name==='expenses')renderExpensesPage();if(name==='checkin')renderCheckinWasherGrid();
   if(name==='settings'){loadSettings();settingsUnlocked=false;}
   updateCounts();
 }
@@ -762,16 +960,26 @@ function loadSettings(){
   if(bn)bn.value=LS.g('as_branch_name','')||'';
 
   document.getElementById('set-biz').value=settings.bizName||'';
-  document.getElementById('set-ph').value=settings.ownerPhone||'';
+  document.getElementById('set-ph').value=(settings.ownerPhone||'').replace(/^\+251/,'');
   document.getElementById('set-em').value=settings.ownerEmail||'';
   document.getElementById('set-svc').value=settings.ejsSvc||'';
   document.getElementById('set-tpl').value=settings.ejsTpl||'';
   document.getElementById('set-key').value=settings.ejsKey||'';
+  const naolInp=document.getElementById('naol-phone-inp');
+  if(naolInp)naolInp.value=(settings.naolPhone||'').replace(/^\+251/,'');
   renderWasherManageList();
+  renderSettingsSvcList();
+}
+function saveNaolPhone(){
+  const ph='+251'+document.getElementById('naol-phone-inp').value.trim();
+  if(!ph){toast('Enter Naol\'s phone number','er');return;}
+  settings.naolPhone=ph;
+  LS.s('as_settings',settings);
+  toast('✅ Naol\'s phone saved');
 }
 function saveSettings(){
   settings.bizName=document.getElementById('set-biz').value.trim()||settings.bizName;
-  settings.ownerPhone=document.getElementById('set-ph').value.trim()||settings.ownerPhone;
+  settings.ownerPhone='+251'+(document.getElementById('set-ph').value.trim())||settings.ownerPhone;
   settings.ownerEmail=document.getElementById('set-em').value.trim();
   LS.s('as_settings',settings);toast('✅ Business info saved!');
 }
@@ -834,7 +1042,7 @@ function clearAll(){
   if(!confirm('⚠️ Delete ALL data permanently? This cannot be undone.'))return;
   if(!confirm('Last warning — delete everything?'))return;
   orders=[];rugs=[];expenses={};savedReps=[];washers=[];staffLoans={};staffBonuses={};attendance={};bizExpenses=[];
-  LS.s('as_orders',[]);LS.s('as_rugs',[]);LS.s('as_expenses',{});LS.s('as_reports',{});LS.s('as_washers',[]);LS.s('as_loans',{});LS.s('as_bonuses',{});LS.s('as_attend',{});LS.s('as_bizexp',[]);
+  LS.s('as_orders',[]);LS.s('as_rugs',[]);LS.s('as_expenses',{});LS.s('as_reports',{});LS.s('as_washers',[]);LS.s('as_loans',{});LS.s('as_bonuses',{});LS.s('as_deductions',{});LS.s('as_salary_payments',{});LS.s('as_attend',{});LS.s('as_bizexp',[]);
   updateCounts();toast('All data cleared','er');
 }
 
@@ -888,13 +1096,14 @@ function openSigModal(id){
 function closeSigModal(){document.getElementById('sig-modal').classList.remove('show');}
 function openRefSigModal(wid){
   refSigTarget=wid;
-  const w=washers.find(x=>x.id===wid);
+  const isNaol=wid==='NAOL';
+  const name=isNaol?'Naol':(washers.find(x=>x.id===wid)||{name:'Worker'}).name;
   ensureSigModal();
   sigTarget='refsig';
   const title=document.getElementById('sig-modal-title');
   const sub=document.getElementById('sig-modal-sub');
   if(title)title.textContent='✍️ REFERENCE SIGNATURE';
-  if(sub)sub.textContent=(w?w.name:'Worker')+' — draw your signature carefully';
+  if(sub)sub.textContent=name+' — draw your signature carefully';
   document.getElementById('sig-modal').classList.add('show');
   requestAnimationFrame(()=>{
     sigCanvas=document.getElementById('sig-modal-canvas');
@@ -923,11 +1132,18 @@ function saveModalSig(){
   const data=sigCanvas.toDataURL();
   // Handle reference signature registration
   if(sigTarget==='refsig'){
-    washers=washers.map(w=>w.id===refSigTarget?{...w,refSig:data}:w);
-    LS.s('as_washers',washers);
-    document.getElementById('sig-modal').classList.remove('show');
-    renderWasherManageList();
-    toast('✅ Reference signature saved for '+((washers.find(w=>w.id===refSigTarget)||{}).name||'worker'));
+    if(refSigTarget==='NAOL'){
+      LS.s('as_naol_refsig',data);
+      document.getElementById('sig-modal').classList.remove('show');
+      renderWasherManageList();
+      toast('✅ Reference signature saved for Naol');
+    } else {
+      washers=washers.map(w=>w.id===refSigTarget?{...w,refSig:data}:w);
+      LS.s('as_washers',washers);
+      document.getElementById('sig-modal').classList.remove('show');
+      renderWasherManageList();
+      toast('✅ Reference signature saved for '+((washers.find(w=>w.id===refSigTarget)||{}).name||'worker'));
+    }
     return;
   }
   sigs[sigTarget]=data;
@@ -1098,7 +1314,7 @@ async function compareSigs(refDataURL, newDataURL){
 
 
 /* ══ SERVICES ══ */
-function allSvcs(){return[...BSVCS,...customSvcs];}
+function allSvcs(){return[...customSvcs];}
 function renderSvcGrid(){
   const g=document.getElementById('svc-grid');g.innerHTML='';
   allSvcs().forEach(svc=>{
@@ -1127,6 +1343,46 @@ function renderSvcGrid(){
 function updateSvcPrice(id,val){
   const idx=ciSvcs.findIndex(s=>s.id===id);
   if(idx>-1){ciSvcs[idx].price=parseFloat(val)||0;renderPriceSumm();}
+}
+function renderSettingsSvcList(){
+  const el=document.getElementById('settings-svc-list');
+  if(!el)return;
+  el.innerHTML='';
+  if(!customSvcs.length){
+    el.innerHTML='<div style="color:#334155;font-size:12px;padding:8px 0;text-align:center;">No services yet. Add your first service below.</div>';
+    return;
+  }
+  customSvcs.forEach(s=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #0f2744;';
+    row.innerHTML=`<div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:14px;color:#e2e8f0;">${esc(s.label)}</div>
+      <div style="font-size:11px;color:#22c55e;">Br ${(s.price||0).toLocaleString()}</div>
+    </div>
+    <button class="btn-rm" onclick="delSvcFromSettings('${s.id}')">✕</button>`;
+    el.appendChild(row);
+  });
+}
+function addSvcFromSettings(){
+  const n=document.getElementById('set-csn').value.trim();
+  const p=parseInt(document.getElementById('set-csp').value)||0;
+  if(!n){toast('Enter service name','er');return;}
+  if(!p){toast('Enter price','er');return;}
+  customSvcs.push({id:'c_'+Date.now(),label:n,price:p});
+  LS.s('as_csvc',customSvcs);
+  document.getElementById('set-csn').value='';
+  document.getElementById('set-csp').value='';
+  renderSettingsSvcList();
+  renderSvcGrid();
+  toast('✅ Service added: '+n);
+}
+function delSvcFromSettings(id){
+  if(!confirm('Remove this service?'))return;
+  customSvcs=customSvcs.filter(s=>s.id!==id);
+  LS.s('as_csvc',customSvcs);
+  renderSettingsSvcList();
+  renderSvcGrid();
+  toast('Service removed','er');
 }
 function addCSvc(){const n=document.getElementById('csn').value.trim(),p=parseInt(document.getElementById('csp').value)||0;if(!n||!p){toast('Enter name and price','er');return;}const s={id:'c_'+Date.now(),label:n,price:p};customSvcs.push(s);LS.s('as_csvc',customSvcs);ciSvcs.push(s);document.getElementById('csn').value='';document.getElementById('csp').value='';renderSvcGrid();renderPriceSumm();}
 
@@ -1199,13 +1455,14 @@ function clearCheckinWasher(){
 
 /* ══ SUBMIT CAR ORDER ══ */
 function submitOrder(){
-  const name=document.getElementById('ci-name').value.trim(),car=document.getElementById('ci-car').value.trim(),phone=document.getElementById('ci-phone').value.trim(),plate=document.getElementById('ci-plate').value.trim();
+  const name=document.getElementById('ci-name').value.trim(),car=document.getElementById('ci-car').value.trim(),phone='+251'+document.getElementById('ci-phone').value.trim(),plate=document.getElementById('ci-plate').value.trim();
   if(!name||!car||!phone||!plate){toast('Fill all required fields','er');return;}
   if(!ciSvcs.length){toast('Select at least one service','er');return;}
   const total=[...ciSvcs,...ciExtras].reduce((a,x)=>a+x.price,0),now=fmtNow();
   const order={ticketNo:genId('ASW'),timeIn:now,dateKey:todayKey(),name,car,phone,plate,items:[...ciItems],services:JSON.parse(JSON.stringify(ciSvcs)),extras:JSON.parse(JSON.stringify(ciExtras)),totalPrice:total,washerSig:sigs.washer||null,ownerSig:sigs.owner||null,status:'Waiting',washerId:ciSelectedWasher?ciSelectedWasher.id:null,washerName:ciSelectedWasher?ciSelectedWasher.name:null};
   sendSMS(phone,`Hi ${name}! ${settings.bizName||'AutoSpa'} received your car (${plate}). Ticket#: ${order.ticketNo}. We will contact you when done. Thank you!`);
   orders.unshift(order);LS.s('as_orders',orders);
+  updateLoyalty(order.phone,order.name,order.totalPrice,'car',order.plate);
   ciSvcs=[];ciExtras=[];ciItems=[];ciSelectedWasher=null;['ci-name','ci-car','ci-phone','ci-plate'].forEach(id=>document.getElementById(id).value='');
   clrSig('washer');clrSig('owner');renderSvcGrid();renderExtras();renderISugg();renderIList();renderPriceSumm();renderCheckinWasherGrid();updateCheckinWasherBadge();
   updateCounts();showCarTk(order);toast('✅ Job order created! SMS sent.');
@@ -1231,18 +1488,38 @@ function printCarTk(){
   w.document.write(`<html><head><title>${o.ticketNo}</title><style>body{font-family:'Courier New',monospace;padding:20px;max-width:380px;margin:auto;text-align:center}h1{font-size:18px}h2{font-size:13px;margin:0}.r{display:flex;justify-content:space-between;border-bottom:1px dashed #ccc;padding:4px 0;font-size:12px;text-align:left}.lbl{font-size:10px;color:#666}.tot{font-size:16px;font-weight:bold;text-align:right;margin-top:8px}.sig{border:1px solid #999;height:55px;width:100%;margin:4px 0;object-fit:contain}.ft{font-size:10px;margin-top:14px;border-top:1px solid #ccc;padding-top:6px}</style></head><body><h1>★ AUTOSPA ★</h1><h2>${esc(settings.bizName||'Car Wash & Detailing')}</h2><p style="font-size:11px">${settings.ownerPhone||''}</p>${qi?`<img src="${qi}" width="140" height="140" style="margin:8px auto;display:block;image-rendering:pixelated"/>`:''}<hr/><div class="r"><span class="lbl">TICKET#</span><span>${o.ticketNo}</span></div><div class="r"><span class="lbl">DATE</span><span>${o.timeIn}</span></div><div class="r"><span class="lbl">CUSTOMER</span><span>${o.name}</span></div><div class="r"><span class="lbl">PHONE</span><span>${o.phone}</span></div><div class="r"><span class="lbl">PLATE</span><span>${o.plate}</span></div><div class="r"><span class="lbl">CAR</span><span>${o.car}</span></div><hr/>${o.services.map(s=>`<div class="r"><span>${s.label}</span><span>P${s.price.toLocaleString()}</span></div>`).join('')}${(o.extras||[]).map(e=>`<div class="r"><span>${e.label}</span><span>P${e.price.toLocaleString()}</span></div>`).join('')}<div class="tot">TOTAL: P${o.totalPrice.toLocaleString()}</div><hr/><div style="font-size:11px;text-align:left">Items: ${(o.items||[]).join(', ')||'None'}</div>${o.washerSig?`<div style="font-size:10px;margin-top:6px;text-align:left">Washer:</div><img src="${o.washerSig}" class="sig"/>`:''}${o.ownerSig?`<div style="font-size:10px;text-align:left">Owner:</div><img src="${o.ownerSig}" class="sig"/>`:''}<div class="ft">By signing, customer acknowledges items listed.<br/>THANK YOU!</div></body></html>`);w.document.close();w.print();}
 
 /* ══ ORDERS ══ */
+function clearOrdDate(){const el=document.getElementById('ord-date');if(el)el.value='';renderOrders();}
 function renderOrders(){
   const q=(document.getElementById('ord-search')?.value||'').toLowerCase();
+  const dateVal=document.getElementById('ord-date')?.value||'';
+  const clrBtn=document.getElementById('ord-date-clr');
+  const lbl=document.getElementById('ord-date-label');
+  if(clrBtn)clrBtn.style.display=dateVal?'block':'none';
+  if(lbl){if(dateVal){const d=new Date(dateVal+'T00:00');lbl.textContent='📅 Showing: '+d.toLocaleDateString('en-ET',{weekday:'long',month:'long',day:'numeric',year:'numeric'});lbl.style.display='block';}else lbl.style.display='none';}
   const list=document.getElementById('orders-list');list.innerHTML='';
-  const filtered=orders.filter(o=>o.name.toLowerCase().includes(q)||o.plate.toLowerCase().includes(q)||o.ticketNo.toLowerCase().includes(q));
-  if(!filtered.length){list.innerHTML=`<div style="text-align:center;padding:50px 20px;color:#334155;"><div style="font-size:44px;margin-bottom:10px;">🚗</div><div style="font-family:'Rajdhani',sans-serif;font-size:18px;">${orders.length===0?'No orders yet':'No results'}</div></div>`;return;}
+  const filtered=orders.filter(o=>{
+    const matchQ=o.name.toLowerCase().includes(q)||o.plate.toLowerCase().includes(q)||o.ticketNo.toLowerCase().includes(q);
+    const matchD=!dateVal||(o.dateKey===dateVal);
+    return matchQ&&matchD;
+  });
+  if(!filtered.length){list.innerHTML=`<div style="text-align:center;padding:50px 20px;color:#334155;"><div style="font-size:44px;margin-bottom:10px;">🚗</div><div style="font-family:'Rajdhani',sans-serif;font-size:18px;">${dateVal?'No orders on this date':orders.length===0?'No orders yet':'No results'}</div></div>`;return;}
   filtered.forEach(o=>{const clr=SCLR[o.status]||'#94a3b8';const d=document.createElement('div');d.className='oc';
     const washerBadge=o.washerName?`<div style="font-size:11px;color:#22d3ee;margin-bottom:6px;">👷 ${esc(o.washerName)}</div>`:'';
     d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;"><div><div class="tn">${esc(o.ticketNo)}</div><div class="on">${esc(o.name)}</div><div class="os">${esc(o.car)} · ${esc(o.plate)}</div><div class="os">${esc(o.phone)}</div></div><div style="text-align:right;"><span class="sb2" style="background:${clr}22;color:${clr};border:1px solid ${clr}44;">${o.status}</span><div style="color:#22c55e;font-family:'Rajdhani',sans-serif;font-size:18px;margin-top:6px;">Br ${o.totalPrice.toLocaleString()}</div></div></div><div style="font-size:11px;color:#475569;margin-bottom:8px;">${esc(o.timeIn)}</div>${washerBadge}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">${(o.services||[]).map(s=>`<span class="st">${esc(s.label)}</span>`).join('')}</div><div class="oa"><select class="ss" onchange="updOrdStatus('${o.ticketNo}',this.value)">${['Waiting','In Progress','Done','Released'].map(s=>`<option${s===o.status?' selected':''}>${s}</option>`).join('')}</select><button style="padding:5px 10px;background:${o.washerName?'#0a2020':'#0f2744'};border:1px solid ${o.washerName?'#22d3ee55':'#22d3ee33'};border-radius:8px;color:#22d3ee;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;" onclick="openAssignModal('${o.ticketNo}')">👷 ${o.washerName?'Re-Assign':'Assign'}</button><button class="btn-tk" onclick='showCarTk(${JSON.stringify(o).replace(/'/g,"&#39;")})'>🎫</button><button class="btn-ph" onclick="window.location.href='tel:${esc(o.phone)}'">📞</button></div>`;list.appendChild(d);});
 }
 function updOrdStatus(ticketNo,status){
   orders=orders.map(x=>x.ticketNo===ticketNo?{...x,status}:x);LS.s('as_orders',orders);
-  if(status==='Released'){const o=orders.find(x=>x.ticketNo===ticketNo);if(o){sendSMS(settings.ownerPhone,`[AutoSpa] Car Released: ${o.plate} (${o.name}) — P${o.totalPrice.toLocaleString()} | ${ticketNo}`);toast('🚗 Released! Owner notified.');}}
+  const o=orders.find(x=>x.ticketNo===ticketNo);
+  if(o){
+    if(status==='Done'){
+      sendSMS(o.phone,`Hi ${o.name}! Your car (${o.plate}) is READY at ${settings.bizName||'AutoSpa'}. Please come pick it up. Ticket#: ${o.ticketNo}. Thank you!`);
+      toast('✅ Car ready! SMS sent to customer.');
+    }
+    if(status==='Released'){
+      sendSMS(settings.ownerPhone,`[AutoSpa] Car Released: ${o.plate} (${o.name}) — Br ${o.totalPrice.toLocaleString()} | ${ticketNo}`);
+      toast('🚗 Released! Owner notified.');
+    }
+  }
   renderOrders();
 }
 
@@ -1253,14 +1530,19 @@ function handleRPh(input){const file=input.files[0];if(!file)return;const reader
 function clrRPh(){rugPh=null;document.getElementById('rph-prev').style.display='none';document.getElementById('rph-clr').style.display='none';document.getElementById('rph-in').value='';}
 
 function submitRug(){
-  const name=document.getElementById('rn').value.trim(),phone=document.getElementById('rp').value.trim(),size=parseFloat(document.getElementById('rs').value)||0,ppm=parseFloat(document.getElementById('rpp').value)||135;
+  const name=document.getElementById('rn').value.trim(),phone='+251'+document.getElementById('rp').value.trim(),size=parseFloat(document.getElementById('rs').value)||0,ppm=parseFloat(document.getElementById('rpp').value)||135;
   if(!name||!phone||!size){toast('Fill all required fields','er');return;}
   const totalPrice=Math.round(size*ppm*100)/100,now=fmtNow();
-  const rug={ticketNo:genId('RUG'),timeIn:now,dateKey:todayKey(),ownerName:name,phone,size,pricePerSqm:ppm,description:document.getElementById('rd').value.trim(),photo:rugPh,totalPrice,status:'Received',paid:rugPaid,paidAt:rugPaid?now:null,released:false};
+  if(rugCheckinSelectedWasher&&!rugCheckinWashMethod){toast('Select wash method (Hand or Machine)','er');return;}
+  const rug={ticketNo:genId('RUG'),timeIn:now,dateKey:todayKey(),ownerName:name,phone,size,pricePerSqm:ppm,description:document.getElementById('rd').value.trim(),photo:rugPh,totalPrice,status:'Received',paid:rugPaid,paidAt:rugPaid?now:null,released:false,washerId:rugCheckinSelectedWasher?rugCheckinSelectedWasher.id:null,washerName:rugCheckinSelectedWasher?rugCheckinSelectedWasher.name:null,washMethod:rugCheckinSelectedWasher?rugCheckinWashMethod:null};
   sendSMS(phone,`Hi ${name}! ${settings.bizName||'AutoSpa'} received your rug. Ticket#: ${rug.ticketNo}. ${rugPaid?'Payment: PAID':'Total due on claim: P'+totalPrice.toLocaleString()+'.'} We will text you when ready!`);
   rugs.unshift(rug);LS.s('as_rugs',rugs);
+  updateLoyalty(rug.phone,rug.ownerName,rug.totalPrice,'rug');
   ['rn','rp','rs','rd'].forEach(id=>document.getElementById(id).value='');document.getElementById('rpp').value='135';
-  rugPaid=false;rugPh=null;document.getElementById('rph-prev').style.display='none';document.getElementById('rph-clr').style.display='none';
+  rugPaid=false;rugPh=null;rugCheckinSelectedWasher=null;rugCheckinWashMethod=null;
+  const _rwm=document.getElementById('rug-wash-method-row');if(_rwm)_rwm.style.display='none';
+  renderRugCheckinWasherGrid();updateRugCheckinWasherBadge();
+  document.getElementById('rph-prev').style.display='none';document.getElementById('rph-clr').style.display='none';
   document.getElementById('pay-tog').className='pt up';document.getElementById('pay-lbl').textContent='💳 Pay on Claim';document.getElementById('pay-lbl').style.color='#94a3b8';document.getElementById('pay-btn').textContent='Mark Paid';
   calcRug();updateCounts();showRugTk(rug);toast('✅ Rug registered! SMS sent.');
   document.querySelectorAll('.stab')[1].click();
@@ -1285,14 +1567,24 @@ function printRugTk(){
 }
 
 /* ══ RUG LIST ══ */
+function clearRugDate(){const el=document.getElementById('rug-date');if(el)el.value='';renderRugs();}
 function renderRugs(){
   const q=(document.getElementById('rug-search')?.value||'').toLowerCase();
+  const dateVal=document.getElementById('rug-date')?.value||'';
+  const clrBtn=document.getElementById('rug-date-clr');
+  const lbl=document.getElementById('rug-date-label');
+  if(clrBtn)clrBtn.style.display=dateVal?'block':'none';
+  if(lbl){if(dateVal){const d=new Date(dateVal+'T00:00');lbl.textContent='📅 Showing: '+d.toLocaleDateString('en-ET',{weekday:'long',month:'long',day:'numeric',year:'numeric'});lbl.style.display='block';}else lbl.style.display='none';}
   const list=document.getElementById('rugs-list');list.innerHTML='';
-  const filtered=rugs.filter(r=>r.ownerName.toLowerCase().includes(q)||r.ticketNo.toLowerCase().includes(q));
-  if(!filtered.length){list.innerHTML=`<div style="text-align:center;padding:50px 20px;color:#334155;"><div style="font-size:44px;margin-bottom:10px;">🪣</div><div style="font-family:'Rajdhani',sans-serif;font-size:18px;">No rug orders yet</div></div>`;return;}
+  const filtered=rugs.filter(r=>{
+    const matchQ=r.ownerName.toLowerCase().includes(q)||r.ticketNo.toLowerCase().includes(q);
+    const matchD=!dateVal||(r.dateKey===dateVal);
+    return matchQ&&matchD;
+  });
+  if(!filtered.length){list.innerHTML=`<div style="text-align:center;padding:50px 20px;color:#334155;"><div style="font-size:44px;margin-bottom:10px;">🪣</div><div style="font-family:'Rajdhani',sans-serif;font-size:18px;">${dateVal?'No rugs on this date':'No rug orders yet'}</div></div>`;return;}
   filtered.forEach(r=>{const clr=SCLR[r.status]||'#94a3b8';const d=document.createElement('div');d.className='oc';d.style.borderColor=r.paid?'#22c55e22':'#f9731333';
     const washerBadge=r.washerName?`<div style="display:inline-flex;align-items:center;gap:5px;background:#0a2020;border:1px solid #22d3ee33;border-radius:8px;padding:3px 10px;margin-bottom:8px;font-size:11px;color:#22d3ee;">👷 ${esc(r.washerName)}</div>`:'';
-    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;"><div><div class="tn" style="color:#f97316;">${esc(r.ticketNo)}</div><div class="on">${esc(r.ownerName)}</div><div class="os">${esc(r.phone)} · ${r.size} m²</div><span class="pb" style="background:${r.paid?'#052e16':'#1c1008'};color:${r.paid?'#22c55e':'#f97316'};border:1px solid ${r.paid?'#22c55e44':'#f9731644'};">${r.paid?'✅ PAID':'⚠️ UNPAID'}</span></div><div style="text-align:right;"><span class="sb2" style="background:${clr}22;color:${clr};border:1px solid ${clr}44;">${r.status}</span><div style="color:#f97316;font-family:'Rajdhani',sans-serif;font-size:18px;margin-top:6px;">Br ${r.totalPrice.toLocaleString()}</div></div></div><div style="font-size:11px;color:#475569;margin-bottom:8px;">${esc(r.timeIn)}</div>${washerBadge}${r.photo?`<img src="${r.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;max-height:110px;object-fit:cover;border:1px solid #f9731633;"/>`:''}<div class="oa"><select class="ss" style="border-color:#f9731333;" onchange="updRugStatus('${r.ticketNo}',this.value)">${['Received','In Progress','Done','Released'].map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select><button style="padding:5px 10px;background:${r.washerName?'#0a2020':'#0f2744'};border:1px solid ${r.washerName?'#22d3ee55':'#22d3ee33'};border-radius:8px;color:#22d3ee;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;" onclick="openAssignRugModal('${r.ticketNo}')">👷 ${r.washerName?'Re-Assign':'Assign'}</button><button class="btn-tk" style="color:#f97316;border-color:#f9731655;" onclick='showRugTk(${JSON.stringify(r).replace(/'/g,"&#39;")})'>🎫</button><button class="btn-ph" onclick="window.location.href='tel:${esc(r.phone)}'">📞</button>${r.status==='Done'&&!r.released?`<button class="btn-tk" style="color:#22c55e;border-color:#22c55e55;background:#052e16;font-size:11px;" onclick='openRelease(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✅ Release</button>`:''}</div>`;
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;"><div><div class="tn" style="color:#f97316;">${esc(r.ticketNo)}</div><div class="on">${esc(r.ownerName)}</div><div class="os">${esc(r.phone)} · ${r.size} m²</div><span class="pb" style="background:${r.paid?'#052e16':'#1c1008'};color:${r.paid?'#22c55e':'#f97316'};border:1px solid ${r.paid?'#22c55e44':'#f9731644'};">${r.paid?'✅ PAID':'⚠️ UNPAID'}</span></div><div style="text-align:right;"><span class="sb2" style="background:${clr}22;color:${clr};border:1px solid ${clr}44;">${r.status}</span><div style="color:#f97316;font-family:'Rajdhani',sans-serif;font-size:18px;margin-top:6px;">Br ${r.totalPrice.toLocaleString()}</div></div></div><div style="font-size:11px;color:#475569;margin-bottom:8px;">${esc(r.timeIn)}</div>${washerBadge}${r.photo?`<img src="${r.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;max-height:110px;object-fit:cover;border:1px solid #f9731633;"/>`:''}<div class="oa"><select class="ss" style="border-color:#f9731333;" onchange="updRugStatus('${r.ticketNo}',this.value)">${['Received','In Progress','Done','Released'].map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select><button style="padding:5px 10px;background:${r.washerName?'#0a2020':'#0f2744'};border:1px solid ${r.washerName?'#22d3ee55':'#22d3ee33'};border-radius:8px;color:#22d3ee;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;" onclick="openAssignRugModal('${r.ticketNo}')">👷 ${r.washerName?'Re-Assign':'Assign'}</button><button class="btn-tk" style="color:#f97316;border-color:#f9731655;" onclick='showRugTk(${JSON.stringify(r).replace(/'/g,"&#39;")})'>🎫</button><button class="btn-ph" onclick="window.location.href='tel:${esc(r.phone)}'">📞</button>${r.status==='Done'&&!r.released?`<button class="btn-tk" style="color:#22c55e;border-color:#22c55e55;background:#052e16;font-size:11px;" onclick='openRelease(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✅ Release</button><button class="btn-tk" style="color:#f59e0b;border-color:#f59e0b55;background:#1c1008;font-size:11px;" onclick="sendPickupReminder('${r.ticketNo}')">📲 Remind</button>`:''}${(()=>{if(r.status==='Done'&&!r.released){const days=Math.floor((Date.now()-new Date(r.timeIn).getTime())/(864e5));if(days>=1)return `<div style="font-size:10px;color:#f59e0b;margin-top:4px;">⚠️ Waiting ${days} day${days>1?'s':''} for pickup</div>`;}return '';})()}</div>`;
     list.appendChild(d);});
 }
 function updRugStatus(ticketNo,status){
@@ -1302,8 +1594,92 @@ function updRugStatus(ticketNo,status){
 }
 
 /* ══ SCAN ══ */
-function openScan(){document.getElementById('scan-in').value='';document.getElementById('scan-modal').classList.add('show');navigator.mediaDevices?.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{scanStream=stream;const v=document.getElementById('scan-vid');v.srcObject=stream;v.play();}).catch(()=>{});}
-function closeScan(){document.getElementById('scan-modal').classList.remove('show');if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}}
+function openScan(){
+  document.getElementById('scan-in').value='';
+  document.getElementById('scan-search').value='';
+  document.getElementById('scan-search-results').innerHTML='';
+  document.getElementById('scan-modal').classList.add('show');
+  switchScanTab('qr');
+}
+let _qrLoopId=null;
+function startQRLoop(vid){
+  const canvas=document.createElement('canvas');
+  const ctx=canvas.getContext('2d');
+  function loop(){
+    if(!scanStream){return;}
+    if(vid.readyState===vid.HAVE_ENOUGH_DATA&&vid.videoWidth>0){
+      canvas.width=vid.videoWidth;canvas.height=vid.videoHeight;
+      ctx.drawImage(vid,0,0,canvas.width,canvas.height);
+      const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+      const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
+      if(code&&code.data){
+        document.getElementById('scan-in').value=code.data;
+        closeScan();
+        const id=code.data.trim().toUpperCase().split('|')[0];
+        const found=rugs.find(r=>r.ticketNo===id);
+        if(!found){toast('Ticket not found: '+id,'er');return;}
+        showScanRes(found);
+        return;
+      }
+    }
+    _qrLoopId=requestAnimationFrame(loop);
+  }
+  _qrLoopId=requestAnimationFrame(loop);
+}
+function closeScan(){
+  document.getElementById('scan-modal').classList.remove('show');
+  if(_qrLoopId){cancelAnimationFrame(_qrLoopId);_qrLoopId=null;}
+  if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}
+}
+function switchScanTab(tab){
+  ['qr','tk','sr'].forEach(t=>{
+    document.getElementById('scan-tab-'+t).style.display=t===tab?'block':'none';
+    const btn=document.getElementById('stab-'+t);
+    btn.style.borderColor=t===tab?'#00d4ff':'#1e3a5f';
+    btn.style.background=t===tab?'#0a1628':'#020d1a';
+    btn.style.color=t===tab?'#00d4ff':'#475569';
+  });
+  // start/stop camera
+  if(tab==='qr'){
+    navigator.mediaDevices?.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})
+      .then(stream=>{
+        scanStream=stream;
+        const v=document.getElementById('scan-vid');
+        v.srcObject=stream;v.play();
+        v.addEventListener('loadedmetadata',()=>startQRLoop(v),{once:true});
+      }).catch(err=>toast('Camera error: '+err.message,'er'));
+  } else {
+    if(_qrLoopId){cancelAnimationFrame(_qrLoopId);_qrLoopId=null;}
+    if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}
+    if(tab==='sr'){setTimeout(()=>document.getElementById('scan-search').focus(),100);}
+    if(tab==='tk'){setTimeout(()=>document.getElementById('scan-in').focus(),100);}
+  }
+}
+function doScanSearch(){
+  const q=document.getElementById('scan-search').value.trim().toLowerCase();
+  const box=document.getElementById('scan-search-results');
+  if(!q){box.innerHTML='';return;}
+  const matches=rugs.filter(r=>
+    r.ownerName.toLowerCase().includes(q)||
+    r.phone.toLowerCase().includes(q)||
+    r.ticketNo.toLowerCase().includes(q)
+  ).slice(0,10);
+  if(!matches.length){box.innerHTML='<div style="color:#475569;font-size:12px;text-align:center;padding:16px;">No rugs found</div>';return;}
+  const clr=r=>({Received:'#f59e0b','In Progress':'#3b82f6',Done:'#22c55e',Released:'#a855f7'}[r.status]||'#475569');
+  box.innerHTML=matches.map(r=>`
+    <div onclick="closeScan();showScanRes(rugs.find(x=>x.ticketNo==='${r.ticketNo}'))" style="background:#071020;border:1px solid #1e3a5f;border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;">
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:#00d4ff;letter-spacing:1px;">${esc(r.ticketNo)}</div>
+        <div style="font-size:14px;color:#e2e8f0;font-weight:500;">${esc(r.ownerName)}</div>
+        <div style="font-size:11px;color:#475569;">${esc(r.phone)} · ${r.size} m²</div>
+        <div style="font-size:10px;color:#334155;">${esc(r.timeIn)}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <span style="background:${clr(r)}22;color:${clr(r)};border:1px solid ${clr(r)}44;border-radius:20px;padding:2px 9px;font-size:10px;font-weight:600;">${r.status}</span>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;color:#f97316;margin-top:4px;">Br ${r.totalPrice.toLocaleString()}</div>
+      </div>
+    </div>`).join('');
+}
 function doScan(){const id=document.getElementById('scan-in').value.trim().toUpperCase().split('|')[0];closeScan();if(!id){toast('Enter a ticket number','er');return;}const found=rugs.find(r=>r.ticketNo===id);if(!found){toast('Ticket not found: '+id,'er');return;}showScanRes(found);}
 
 function showScanRes(rug){
@@ -1328,15 +1704,410 @@ function openRelease(rug){
   clrSig('release');document.getElementById('release-modal').classList.add('show');setTimeout(()=>initSig('release'),120);
 }
 function confirmRelease(){
-  if(!sigs.release){alert('Please sign the release declaration first.');return;}
+  if(!sigs.release){
+    const canvas=document.getElementById('sig-release');
+    canvas.classList.add('shake');
+    setTimeout(()=>canvas.classList.remove('shake'),500);
+    toast('❌ Customer must sign before releasing','er');
+    return;
+  }
   const now=fmtNow();
-  rugs=rugs.map(r=>r.ticketNo===relTarget.ticketNo?{...r,status:'Released',released:true,releaseSig:sigs.release,releaseTime:now,paid:true,paidAt:r.paidAt||now}:r);
+  const released={...relTarget,status:'Released',released:true,releaseSig:sigs.release,releaseTime:now,paid:true,paidAt:relTarget.paidAt||now};
+  rugs=rugs.map(r=>r.ticketNo===relTarget.ticketNo?released:r);
   LS.s('as_rugs',rugs);
-  sendSMS(settings.ownerPhone,`[AutoSpa] Rug Released: ${relTarget.ticketNo} — ${relTarget.ownerName} | P${relTarget.totalPrice.toLocaleString()} | ${now}`);
-  closeM('release-modal');renderRugs();updateCounts();toast('✅ Rug released! Owner notified.');
+  sendSMS(settings.ownerPhone,`[AutoSpa] Rug Released: ${relTarget.ticketNo} — ${relTarget.ownerName} | Br ${relTarget.totalPrice.toLocaleString()} | ${now}`);
+  closeM('release-modal');
+  renderRugs();updateCounts();
+  showReleaseReceipt(released);
+}
+function showReleaseReceipt(rug){
+  const biz=settings.bizName||'AutoSpa Car Wash';
+  document.getElementById('receipt-body').innerHTML=`
+    <div style="background:#020d1a;border:1px solid #22c55e44;border-radius:12px;padding:16px;margin-bottom:12px;font-family:'Courier New',monospace;">
+      <div style="text-align:center;border-bottom:1px dashed #1e3a5f;padding-bottom:12px;margin-bottom:12px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;color:#22c55e;letter-spacing:3px;">${esc(biz)}</div>
+        <div style="font-size:11px;color:#475569;letter-spacing:2px;">RUG RELEASE RECEIPT</div>
+        <div style="font-size:10px;color:#334155;margin-top:2px;">${esc(rug.releaseTime)}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #0a1628;"><span style="color:#64748b;">TICKET #</span><span style="color:#e2e8f0;font-weight:bold;">${esc(rug.ticketNo)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #0a1628;"><span style="color:#64748b;">CUSTOMER</span><span style="color:#e2e8f0;">${esc(rug.ownerName)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #0a1628;"><span style="color:#64748b;">PHONE</span><span style="color:#e2e8f0;">${esc(rug.phone)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #0a1628;"><span style="color:#64748b;">DESCRIPTION</span><span style="color:#e2e8f0;">${esc(rug.description||'Rug/Carpet')}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #0a1628;"><span style="color:#64748b;">SIZE</span><span style="color:#e2e8f0;">${rug.size} m²</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;padding:8px 0;"><span style="color:#64748b;font-family:'Rajdhani',sans-serif;">TOTAL PAID</span><span style="color:#22c55e;font-family:'Rajdhani',sans-serif;font-size:18px;">Br ${rug.totalPrice.toLocaleString()}</span></div>
+      <div style="border-top:1px dashed #1e3a5f;padding-top:12px;margin-top:4px;">
+        <div style="font-size:10px;color:#64748b;margin-bottom:6px;letter-spacing:1px;">CUSTOMER SIGNATURE</div>
+        <img src="${rug.releaseSig}" style="width:100%;max-height:80px;object-fit:contain;background:#071020;border-radius:8px;border:1px solid #22c55e33;"/>
+        <div style="font-size:10px;color:#334155;text-align:center;margin-top:6px;">Customer confirms receipt of rug in good condition</div>
+      </div>
+      <div style="text-align:center;margin-top:12px;padding-top:10px;border-top:1px dashed #1e3a5f;">
+        <div style="font-size:10px;color:#334155;">Thank you for choosing ${esc(biz)}!</div>
+        <div style="font-size:10px;color:#1e3a5f;margin-top:2px;">${settings.ownerPhone||''}</div>
+      </div>
+    </div>`;
+  document.getElementById('release-receipt-modal').classList.add('show');
+}
+let _receiptData=null;
+function printReleaseReceipt(){
+  const rug=rugs.find(r=>r.released&&r.releaseSig===_receiptData?.releaseSig)||rugs.find(r=>r.released);
+  // Use receipt-body content to print
+  const body=document.getElementById('receipt-body').innerHTML;
+  const biz=settings.bizName||'AutoSpa Car Wash';
+  const w=window.open('','_blank','width=400,height=600');
+  w.document.write(`<html><head><title>Release Receipt</title>
+  <style>
+    body{font-family:'Courier New',monospace;padding:20px;max-width:380px;margin:auto;background:#fff;color:#000;}
+    .header{text-align:center;border-bottom:2px dashed #ccc;padding-bottom:12px;margin-bottom:12px;}
+    .biz{font-size:20px;font-weight:bold;letter-spacing:3px;}
+    .sub{font-size:11px;color:#666;letter-spacing:2px;}
+    .row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #eee;}
+    .lbl{color:#666;}.val{font-weight:bold;}
+    .total{display:flex;justify-content:space-between;font-size:16px;font-weight:bold;padding:8px 0;}
+    .sig-sec{border-top:2px dashed #ccc;margin-top:12px;padding-top:12px;}
+    .sig-lbl{font-size:10px;color:#666;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
+    .sig-img{width:100%;max-height:80px;object-fit:contain;border:1px solid #ccc;border-radius:4px;}
+    .footer{text-align:center;margin-top:14px;border-top:1px dashed #ccc;padding-top:10px;font-size:10px;color:#666;}
+    @media print{body{margin:0;padding:10px;}}
+  </style></head><body>
+  <div class="header">
+    <div class="biz">${biz}</div>
+    <div class="sub">RUG RELEASE RECEIPT</div>
+    <div style="font-size:10px;color:#999;margin-top:2px;" id="rtime"></div>
+  </div>
+  <div id="rrows"></div>
+  <div class="sig-sec">
+    <div class="sig-lbl">Customer Signature — confirms rug received in good condition</div>
+    <div id="rsig"></div>
+  </div>
+  <div class="footer">Thank you for choosing ${biz}!<br/>${settings.ownerPhone||''}</div>
+  <script>
+    const r=${JSON.stringify(rugs.find(x=>x.releaseSig))};
+    // find the right rug from URL param not possible here, use passed data
+  <\/script>
+  </body></html>`);
+  // Actually build it properly using the DOM
+  w.close();
+  // Simpler approach: build full HTML with data
+  const r2=rugs.find(x=>x.released&&x.releaseSig);
+  _printReceiptWindow(r2||{},biz);
+}
+function _printReceiptWindow(r,biz){
+  if(!r||!r.ticketNo){toast('Receipt data not found','er');return;}
+  const w=window.open('','_blank','width=420,height=680');
+  w.document.write(`<!DOCTYPE html><html><head><title>Release Receipt - ${r.ticketNo}</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Courier New',monospace;padding:20px;max-width:380px;margin:auto;background:#fff;color:#111;font-size:13px;}
+    .header{text-align:center;padding-bottom:12px;margin-bottom:12px;border-bottom:2px dashed #aaa;}
+    .biz{font-size:22px;font-weight:bold;letter-spacing:3px;text-transform:uppercase;}
+    .sub{font-size:11px;color:#666;letter-spacing:2px;margin-top:2px;}
+    .dt{font-size:10px;color:#999;margin-top:4px;}
+    .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;}
+    .lbl{color:#666;font-size:11px;}
+    .val{font-weight:bold;font-size:12px;text-align:right;}
+    .total-row{display:flex;justify-content:space-between;padding:10px 0;font-size:16px;font-weight:bold;border-top:2px solid #111;margin-top:4px;}
+    .paid-badge{text-align:center;padding:6px;border-radius:4px;font-weight:bold;font-size:13px;margin:8px 0;background:#e6ffe6;color:#006600;border:1px solid #00aa00;}
+    .sig-sec{margin-top:14px;padding-top:12px;border-top:2px dashed #aaa;}
+    .sig-lbl{font-size:10px;color:#666;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+    .sig-img{width:100%;max-height:90px;object-fit:contain;border:1px solid #ccc;border-radius:4px;background:#f9f9f9;}
+    .confirm-txt{font-size:10px;color:#666;text-align:center;margin-top:6px;font-style:italic;}
+    .footer{text-align:center;margin-top:14px;padding-top:10px;border-top:1px dashed #aaa;font-size:10px;color:#888;}
+    @media print{body{padding:6px;} button{display:none;}}
+  </style></head><body>
+  <div class="header">
+    <div class="biz">${biz}</div>
+    <div class="sub">✅ RUG RELEASE RECEIPT</div>
+    <div class="dt">${r.releaseTime||''}</div>
+  </div>
+  <div class="row"><span class="lbl">TICKET #</span><span class="val">${r.ticketNo}</span></div>
+  <div class="row"><span class="lbl">CUSTOMER</span><span class="val">${r.ownerName||''}</span></div>
+  <div class="row"><span class="lbl">PHONE</span><span class="val">${r.phone||''}</span></div>
+  <div class="row"><span class="lbl">DESCRIPTION</span><span class="val">${r.description||'Rug/Carpet'}</span></div>
+  <div class="row"><span class="lbl">SIZE</span><span class="val">${r.size||''} m²</span></div>
+  <div class="row"><span class="lbl">PRICE / m²</span><span class="val">Br ${(r.pricePerSqm||0).toLocaleString()}</span></div>
+  <div class="row"><span class="lbl">DATE IN</span><span class="val">${r.timeIn||''}</span></div>
+  <div class="total-row"><span>TOTAL</span><span>Br ${(r.totalPrice||0).toLocaleString()}</span></div>
+  <div class="paid-badge">✅ PAYMENT CONFIRMED</div>
+  <div class="sig-sec">
+    <div class="sig-lbl">Customer Signature</div>
+    ${r.releaseSig?`<img class="sig-img" src="${r.releaseSig}"/>`:'<div style="height:70px;border:1px dashed #ccc;border-radius:4px;"></div>'}
+    <div class="confirm-txt">I confirm I have received my rug/carpet in good condition.</div>
+  </div>
+  <div class="footer">Thank you for choosing ${biz}!<br/>${settings.ownerPhone||''}</div>
+  <br/>
+  <button onclick="window.print()" style="width:100%;padding:10px;background:#006600;color:#fff;border:none;border-radius:6px;font-size:14px;cursor:pointer;">🖨️ Print</button>
+  </body></html>`);
+  w.document.close();
 }
 
 /* ══ REPORTS ══ */
+
+/* ══ RUG PICKUP REMINDER ══ */
+function sendPickupReminder(ticketNo){
+  const r=rugs.find(x=>x.ticketNo===ticketNo);
+  if(!r)return;
+  const days=Math.floor((Date.now()-new Date(r.timeIn).getTime())/(864e5));
+  sendSMS(r.phone,`Hi ${r.ownerName}! Reminder: Your rug/carpet is ready for pickup at ${settings.bizName||'AutoSpa'}. ${r.paid?'Payment: PAID':'Amount due: Br '+r.totalPrice.toLocaleString()}. Ticket#: ${r.ticketNo}. Please collect soon!`);
+  toast(`📲 Pickup reminder sent to ${r.ownerName}`);
+}
+
+/* ══ CUSTOMER LOYALTY ══ */
+function updateLoyalty(phone,name,amount,type,plate){
+  if(!phone)return;
+  const key=phone.replace(/\s/g,'');
+  if(!loyaltyData[key])loyaltyData[key]={name,phone:key,visits:0,carVisits:0,rugVisits:0,totalSpent:0,points:0,firstVisit:todayKey()};
+  const L=loyaltyData[key];
+  L.name=name;L.visits++;L.totalSpent+=amount;
+  if(type==='car'){L.carVisits++;if(plate)L.plate=plate;}else L.rugVisits++;
+  // 1 point per visit (car or rug)
+  L.points=L.visits;
+  L.lastVisit=todayKey();
+  LS.s('as_loyalty',loyaltyData);
+}
+function getLoyaltyTier(points){
+  if(points>=60)return{label:'💎 Diamond',color:'#22d3ee',min:60};
+  if(points>=25)return{label:'🥇 Gold',color:'#f59e0b',min:25};
+  if(points>=10)return{label:'🥈 Silver',color:'#94a3b8',min:10};
+  return{label:'🥉 Bronze',color:'#cd7f32',min:0};
+}
+function renderLoyaltyPage(){
+  const box=document.getElementById('loyalty-list');
+  if(!box)return;
+  const all=Object.values(loyaltyData).sort((a,b)=>b.points-a.points);
+  if(!all.length){box.innerHTML='<div style="text-align:center;padding:30px;color:#334155;font-size:13px;">No customers yet — loyalty data builds automatically as orders are placed.</div>';return;}
+  const q=(document.getElementById('loyalty-search')?.value||'').toLowerCase();
+  const filtered=q?all.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q)||(c.plate||'').toLowerCase().includes(q)):all;
+  box.innerHTML=filtered.map(c=>{
+    const tier=getLoyaltyTier(c.points);
+    const nextTier=c.points<10?{label:'Silver',min:10}:c.points<25?{label:'Gold',min:25}:c.points<60?{label:'Diamond',min:60}:null;
+    const progress=nextTier?Math.min(100,Math.round((c.points/(nextTier.min))*100)):100;
+    return `<div style="background:#020d1a;border:1px solid ${tier.color}33;border-radius:12px;padding:12px 14px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <div>
+          <div style="font-size:15px;color:#e2e8f0;font-weight:500;">${esc(c.name)}</div>
+          <div style="font-size:11px;color:#475569;">${esc(c.phone)}${c.plate?' · <span style="color:#00d4ff;">'+esc(c.plate)+'</span>':''}</div>
+          <div style="font-size:10px;color:#334155;margin-top:2px;">First: ${c.firstVisit||'—'} · Last: ${c.lastVisit||'—'}</div>
+        </div>
+        <div style="text-align:right;">
+          <span style="background:${tier.color}22;color:${tier.color};border:1px solid ${tier.color}44;border-radius:12px;padding:2px 10px;font-size:11px;">${tier.label}</span>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:20px;color:${tier.color};margin-top:4px;">${c.points} pts</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:8px;font-size:11px;">
+        <span style="color:#00d4ff;">🚗 ${c.carVisits} cars</span>
+        <span style="color:#f97316;">🪣 ${c.rugVisits} rugs</span>
+        <span style="color:#22c55e;">💰 Br ${c.totalSpent.toLocaleString()}</span>
+        <span style="color:#a855f7;">🔁 ${c.visits} visits</span>
+      </div>
+      ${nextTier?`<div style="background:#0a1628;border-radius:6px;height:5px;overflow:hidden;"><div style="background:${tier.color};height:100%;width:${progress}%;border-radius:6px;"></div></div><div style="font-size:10px;color:#475569;margin-top:3px;">${c.points}/${nextTier.min} pts to ${nextTier.label}</div>`:'<div style="font-size:10px;color:#22d3ee;">⭐ Maximum tier reached!</div>'}
+    </div>`;
+  }).join('');
+}
+
+/* ══ WASHER PERFORMANCE SCORE ══ */
+function getWasherPerformance(wid){
+  const allOrders=orders.filter(o=>o.washerId===wid||o.washerName===washers.find(w=>w.id===wid)?.name);
+  const allRugs=rugs.filter(r=>r.washerId===wid||r.washerName===washers.find(w=>w.id===wid)?.name);
+  const totalJobs=allOrders.length+allRugs.length;
+  const deducts=(staffDeductions[wid]||[]);
+  const bonuses=(staffBonuses[wid]||[]);
+  const totalDeductAmt=deducts.reduce((a,d)=>a+d.amt,0);
+  const totalBonusAmt=bonuses.reduce((a,b)=>a+b.amt,0);
+  const deductCount=deducts.length;
+  const bonusCount=bonuses.length;
+  // Score: start 100, -5 per deduction, -2 per absent, +3 per bonus, cap 0-100
+  const absentDays=Object.values(attendance).filter(day=>day[wid]?.absent).length;
+  let score=100-(deductCount*5)-(absentDays*2)+(bonusCount*3);
+  score=Math.max(0,Math.min(100,score));
+  const grade=score>=85?{label:'⭐ Excellent',color:'#22c55e'}:score>=70?{label:'👍 Good',color:'#22d3ee'}:score>=50?{label:'⚠️ Average',color:'#f59e0b'}:{label:'❌ Poor',color:'#ef4444'};
+  return{totalJobs,deductCount,bonusCount,totalDeductAmt,totalBonusAmt,absentDays,score,grade};
+}
+function renderPerformancePage(){
+  const box=document.getElementById('perf-list');
+  if(!box)return;
+  const all=[...washers];
+  if(!all.length){box.innerHTML='<div style="color:#334155;text-align:center;padding:20px;font-size:13px;">No washers added yet.</div>';return;}
+  box.innerHTML=all.map(w=>{
+    const p=getWasherPerformance(w.id);
+    const barW=p.score;
+    const barClr=p.grade.color;
+    return `<div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:16px;color:#e2e8f0;">${esc(w.name)}</div>
+          <div style="font-size:10px;color:#475569;">${esc(w.phone)}</div>
+        </div>
+        <div style="text-align:right;">
+          <span style="background:${barClr}22;color:${barClr};border:1px solid ${barClr}44;border-radius:12px;padding:3px 10px;font-size:11px;">${p.grade.label}</span>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:22px;color:${barClr};margin-top:2px;">${p.score}<span style="font-size:12px;">/100</span></div>
+        </div>
+      </div>
+      <div style="background:#0a1628;border-radius:6px;height:7px;overflow:hidden;margin-bottom:10px;">
+        <div style="background:${barClr};height:100%;width:${barW}%;border-radius:6px;transition:width 0.5s;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;">
+        <div style="background:#071020;border-radius:8px;padding:6px 8px;text-align:center;"><div style="color:#64748b;">Jobs</div><div style="color:#00d4ff;font-family:'Rajdhani',sans-serif;font-size:16px;">${p.totalJobs}</div></div>
+        <div style="background:#071020;border-radius:8px;padding:6px 8px;text-align:center;"><div style="color:#64748b;">Deductions</div><div style="color:#ef4444;font-family:'Rajdhani',sans-serif;font-size:16px;">${p.deductCount}</div></div>
+        <div style="background:#071020;border-radius:8px;padding:6px 8px;text-align:center;"><div style="color:#64748b;">Bonuses</div><div style="color:#22c55e;font-family:'Rajdhani',sans-serif;font-size:16px;">${p.bonusCount}</div></div>
+        <div style="background:#071020;border-radius:8px;padding:6px 8px;text-align:center;"><div style="color:#64748b;">Absent Days</div><div style="color:#f59e0b;font-family:'Rajdhani',sans-serif;font-size:16px;">${p.absentDays}</div></div>
+        <div style="background:#071020;border-radius:8px;padding:6px 8px;text-align:center;"><div style="color:#64748b;">Deducted</div><div style="color:#ef4444;font-family:'Rajdhani',sans-serif;font-size:14px;">-Br ${p.totalDeductAmt.toLocaleString()}</div></div>
+        <div style="background:#071020;border-radius:8px;padding:6px 8px;text-align:center;"><div style="color:#64748b;">Bonused</div><div style="color:#22c55e;font-family:'Rajdhani',sans-serif;font-size:14px;">+Br ${p.totalBonusAmt.toLocaleString()}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══ SHIFT SCHEDULING ══ */
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAY_KEYS=['mon','tue','wed','thu','fri','sat','sun'];
+function renderShiftPage(){
+  const box=document.getElementById('shift-grid');
+  if(!box)return;
+  const all=[...washers,{id:'NAOL',name:'Naol (Foreman)'}];
+  if(washers.length===0){box.innerHTML='<div style="color:#334155;text-align:center;padding:20px;font-size:13px;">No washers added yet.</div>';return;}
+  const today=DAY_KEYS[new Date().getDay()===0?6:new Date().getDay()-1];
+  box.innerHTML=`
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:8px 6px;color:#475569;font-family:'Rajdhani',sans-serif;font-size:11px;border-bottom:1px solid #1e3a5f;">WORKER</th>
+            ${DAYS.map((d,i)=>`<th style="padding:8px 4px;color:${DAY_KEYS[i]===today?'#22d3ee':'#475569'};font-family:'Rajdhani',sans-serif;font-size:11px;border-bottom:1px solid ${DAY_KEYS[i]===today?'#22d3ee':'#1e3a5f'};text-align:center;">${d}${DAY_KEYS[i]===today?'<div style="width:4px;height:4px;background:#22d3ee;border-radius:50%;margin:2px auto 0;"></div>':''}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${all.map(w=>{
+            const shifts=staffShifts[w.id]||{};
+            return `<tr>
+              <td style="padding:8px 6px;color:#e2e8f0;font-size:12px;white-space:nowrap;border-bottom:1px solid #0a1628;">${esc(w.name.split(' ')[0])}</td>
+              ${DAY_KEYS.map(dk=>{
+                const on=shifts[dk]!==false&&(shifts[dk]===true||(shifts[dk]===undefined));
+                return `<td style="padding:4px;text-align:center;border-bottom:1px solid #0a1628;">
+                  <button onclick="toggleShift('${w.id}','${dk}')" style="width:32px;height:28px;border-radius:6px;border:1px solid ${on?'#22c55e55':'#1e3a5f'};background:${on?'#052e16':'#020d1a'};color:${on?'#22c55e':'#334155'};cursor:pointer;font-size:13px;">${on?'✓':'·'}</button>
+                </td>`;
+              }).join('')}
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:#334155;text-align:center;">Tap ✓/· to toggle a shift day. All workers default to all days on.</div>`;
+}
+function toggleShift(wid,dayKey){
+  if(!staffShifts[wid])staffShifts[wid]={};
+  const cur=staffShifts[wid][dayKey];
+  // default is true (working), toggle to false and back
+  staffShifts[wid][dayKey]=(cur===false)?true:false;
+  LS.s('as_shifts',staffShifts);
+  renderShiftPage();
+}
+function getTodayShift(){
+  const today=DAY_KEYS[new Date().getDay()===0?6:new Date().getDay()-1];
+  const working=[...washers,{id:'NAOL',name:'Naol'}].filter(w=>{
+    const s=staffShifts[w.id]||{};
+    return s[today]!==false;
+  });
+  return working;
+}
+
+/* ══ BUSINESS INTELLIGENCE CHARTS ══ */
+function drawMiniBar(canvasId,labels,values,color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  if(!values.length)return;
+  const max=Math.max(...values,1);
+  const barW=Math.floor((W-labels.length*2)/labels.length);
+  values.forEach((v,i)=>{
+    const bh=Math.round((v/max)*(H-20));
+    const x=i*(barW+2);
+    const y=H-20-bh;
+    ctx.fillStyle=color+'99';
+    ctx.fillRect(x,y,barW,bh);
+    ctx.fillStyle=color;
+    ctx.fillRect(x,H-20,barW,2);
+    // label
+    ctx.fillStyle='#475569';
+    ctx.font='9px sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(labels[i],x+barW/2,H-6);
+    // value on top
+    if(v>0){ctx.fillStyle=color;ctx.font='bold 9px sans-serif';ctx.fillText(v>999?Math.round(v/1000)+'k':v,x+barW/2,y-2);}
+  });
+}
+function renderBIPage(){
+  const biBox=document.getElementById('bi-content');
+  if(!biBox)return;
+  const now=new Date();
+  // Last 7 days revenue
+  const days7=[],labels7=[];
+  for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const dk=d.toISOString().slice(0,10);days7.push(dk);labels7.push(['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()]);}
+  const rev7=days7.map(dk=>orders.filter(o=>o.dateKey===dk).reduce((a,o)=>a+o.totalPrice,0)+rugs.filter(r=>r.dateKey===dk).reduce((a,r)=>a+r.totalPrice,0));
+  // Last 4 weeks revenue
+  const weeks4=[],wLabels=[];
+  for(let i=3;i>=0;i--){
+    const mon=new Date(now);mon.setDate(mon.getDate()-(mon.getDay()===0?6:mon.getDay()-1)-i*7);
+    const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+    const wkeys=[];for(let d=new Date(mon);d<=sun;d.setDate(d.getDate()+1))wkeys.push(d.toISOString().slice(0,10));
+    weeks4.push(wkeys);wLabels.push('W'+(4-i));
+  }
+  const rev4=weeks4.map(wk=>orders.filter(o=>wk.includes(o.dateKey)).reduce((a,o)=>a+o.totalPrice,0)+rugs.filter(r=>wk.includes(r.dateKey)).reduce((a,r)=>a+r.totalPrice,0));
+  // Service frequency
+  const svcCount={};
+  orders.forEach(o=>(o.services||[]).forEach(s=>{svcCount[s.label]=(svcCount[s.label]||0)+1;}));
+  const topSvc=Object.entries(svcCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  // Peak hours
+  const hourCount={};
+  [...orders,...rugs].forEach(x=>{const h=x.timeIn?parseInt(x.timeIn.split(':')[0]):null;if(h!==null)hourCount[h]=(hourCount[h]||0)+1;});
+  const peakHours=Object.entries(hourCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  // Top customers
+  const topCust=Object.values(loyaltyData).sort((a,b)=>b.totalSpent-a.totalSpent).slice(0,5);
+  // Totals
+  const totalCars=orders.length,totalRugs=rugs.length;
+  const totalRev=orders.reduce((a,o)=>a+o.totalPrice,0)+rugs.reduce((a,r)=>a+r.totalPrice,0);
+  const totalExp=bizExpenses.reduce((a,e)=>a+e.amt,0);
+  biBox.innerHTML=`
+    <!-- Lifetime Summary -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="background:#020d1a;border:1px solid #00d4ff33;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:10px;color:#475569;letter-spacing:1px;">TOTAL CARS</div><div style="font-family:'Rajdhani',sans-serif;font-size:28px;color:#00d4ff;">${totalCars}</div></div>
+      <div style="background:#020d1a;border:1px solid #f9731633;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:10px;color:#475569;letter-spacing:1px;">TOTAL RUGS</div><div style="font-family:'Rajdhani',sans-serif;font-size:28px;color:#f97316;">${totalRugs}</div></div>
+      <div style="background:#020d1a;border:1px solid #22c55e33;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:10px;color:#475569;letter-spacing:1px;">TOTAL REVENUE</div><div style="font-family:'Rajdhani',sans-serif;font-size:20px;color:#22c55e;">Br ${totalRev.toLocaleString()}</div></div>
+      <div style="background:#020d1a;border:1px solid #a855f733;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:10px;color:#475569;letter-spacing:1px;">NET PROFIT</div><div style="font-family:'Rajdhani',sans-serif;font-size:20px;color:#a855f7;">Br ${(totalRev-totalExp).toLocaleString()}</div></div>
+    </div>
+    <!-- 7-day chart -->
+    <div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:12px;padding:12px;margin-bottom:10px;">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#22c55e;letter-spacing:1px;margin-bottom:8px;">📈 REVENUE — LAST 7 DAYS</div>
+      <canvas id="chart-7day" width="320" height="100" style="width:100%;"></canvas>
+    </div>
+    <!-- 4-week chart -->
+    <div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:12px;padding:12px;margin-bottom:10px;">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#00d4ff;letter-spacing:1px;margin-bottom:8px;">📊 REVENUE — LAST 4 WEEKS</div>
+      <canvas id="chart-4wk" width="320" height="100" style="width:100%;"></canvas>
+    </div>
+    <!-- Top services -->
+    <div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:12px;padding:12px;margin-bottom:10px;">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#f59e0b;letter-spacing:1px;margin-bottom:8px;">🏆 TOP SERVICES</div>
+      ${topSvc.length?topSvc.map(([svc,cnt],i)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #0a1628;"><span style="font-size:12px;color:#94a3b8;">${i+1}. ${esc(svc)}</span><span style="font-family:'Rajdhani',sans-serif;color:#f59e0b;font-size:14px;">${cnt}x</span></div>`).join(''):'<div style="color:#334155;font-size:12px;text-align:center;padding:8px;">No service data yet</div>'}
+    </div>
+    <!-- Peak hours -->
+    <div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:12px;padding:12px;margin-bottom:10px;">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#a855f7;letter-spacing:1px;margin-bottom:8px;">⏰ PEAK HOURS</div>
+      ${peakHours.length?peakHours.map(([h,cnt],i)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #0a1628;"><span style="font-size:12px;color:#94a3b8;">${i+1}. ${h}:00 – ${(+h+1)%24}:00</span><span style="font-family:'Rajdhani',sans-serif;color:#a855f7;font-size:14px;">${cnt} jobs</span></div>`).join(''):'<div style="color:#334155;font-size:12px;text-align:center;padding:8px;">No data yet</div>'}
+    </div>
+    <!-- Top spending customers -->
+    <div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:12px;padding:12px;">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#22d3ee;letter-spacing:1px;margin-bottom:8px;">👑 TOP CUSTOMERS BY SPEND</div>
+      ${topCust.length?topCust.map((c,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #0a1628;"><span style="font-size:12px;color:#94a3b8;">${i+1}. ${esc(c.name)} <span style="color:#475569;font-size:10px;">${c.visits} visits</span></span><span style="font-family:'Rajdhani',sans-serif;color:#22d3ee;font-size:14px;">Br ${c.totalSpent.toLocaleString()}</span></div>`).join(''):'<div style="color:#334155;font-size:12px;text-align:center;padding:8px;">No customer data yet</div>'}
+    </div>`;
+  // Draw charts after DOM renders
+  setTimeout(()=>{
+    drawMiniBar('chart-7day',labels7,rev7,'#22c55e');
+    drawMiniBar('chart-4wk',wLabels,rev4,'#00d4ff');
+  },50);
+}
+
 function renderReports(){
   const dk=todayKey(),dayO=orders.filter(o=>o.dateKey===dk),dayR=rugs.filter(r=>r.dateKey===dk);
   const todayBizExp=bizExpenses.filter(e=>e.dateKey===dk);
@@ -1353,6 +2124,97 @@ function renderReports(){
   const allDates=[...new Set([...Object.keys(savedReps),todayKey()])].sort().reverse();
   if(!allDates.length){rl.innerHTML='<div style="color:#334155;font-size:13px;">No saved reports yet.</div>';return;}
   allDates.forEach(d=>{const r=savedReps[d]||{carCount:0,rugCount:0,totalSales:0,totalExpenses:0};const div=document.createElement('div');div.style.cssText='cursor:pointer;background:#020d1a;border:1px solid #1e3a5f;border-radius:10px;padding:10px 14px;margin-bottom:8px;';div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-family:'Rajdhani',sans-serif;font-size:13px;color:#a855f7;">${fmtDate(d)}</div><div style="font-size:11px;color:#475569;">Cars:${r.carCount} · Rugs:${r.rugCount}</div></div><div style="text-align:right;"><div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#22c55e;">Br ${(r.totalSales||0).toLocaleString()}</div><div style="font-size:11px;color:#ef4444;">-Br ${(r.totalExpenses||0).toLocaleString()}</div></div></div>`;div.onclick=()=>showRepDetail(r);rl.appendChild(div);});
+}
+/* ══ DATE JOB VIEWER ══ */
+let djvMode='all';
+function setDjvMode(mode){
+  djvMode=mode;
+  ['all','cars','rugs'].forEach(m=>{
+    const btn=document.getElementById('djv-btn-'+m);if(!btn)return;
+    const isActive=m===mode;
+    const c=m==='rugs'?'#f97316':'#00d4ff';
+    btn.style.border=`1px solid ${isActive?c:'#1e3a5f'}`;
+    btn.style.background=isActive?(m==='rugs'?'#1a0a00':'#0a1628'):'#020d1a';
+    btn.style.color=isActive?c:'#475569';
+  });
+  renderDateJobViewer();
+}
+function renderDateJobViewer(){
+  const dateVal=document.getElementById('djv-date').value;
+  const results=document.getElementById('djv-results');
+  const summary=document.getElementById('djv-summary');
+  if(!dateVal){results.innerHTML='<div style="color:#334155;font-size:12px;text-align:center;padding:20px 0;">Pick a date above to see jobs.</div>';if(summary)summary.style.display='none';return;}
+  const dk=dateVal;
+  const dayOrders=orders.filter(o=>o.dateKey===dk);
+  const dayRugs=rugs.filter(r=>r.dateKey===dk);
+  const dayExp=bizExpenses.filter(e=>e.dateKey===dk);
+  const carSales=dayOrders.reduce((a,o)=>a+(o.totalPrice||0),0);
+  const rugSales=dayRugs.reduce((a,r)=>a+(r.totalPrice||0),0);
+  const totalExp=dayExp.reduce((a,e)=>a+e.amt,0);
+  const fmtDk=new Date(dk+'T00:00:00').toLocaleDateString('en-ET',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  if(summary){
+    summary.style.display='flex';
+    summary.innerHTML=`
+      <div style="background:#020d1a;border:1px solid #00d4ff33;border-radius:8px;padding:7px 10px;flex:1;text-align:center;"><div style="font-size:9px;color:#64748b;">CARS</div><div style="font-family:'Rajdhani',sans-serif;font-size:20px;color:#00d4ff;">${dayOrders.length}</div></div>
+      <div style="background:#020d1a;border:1px solid #f9731633;border-radius:8px;padding:7px 10px;flex:1;text-align:center;"><div style="font-size:9px;color:#64748b;">RUGS</div><div style="font-family:'Rajdhani',sans-serif;font-size:20px;color:#f97316;">${dayRugs.length}</div></div>
+      <div style="background:#020d1a;border:1px solid #22c55e33;border-radius:8px;padding:7px 10px;flex:1;text-align:center;"><div style="font-size:9px;color:#64748b;">SALES</div><div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#22c55e;">Br ${(carSales+rugSales).toLocaleString()}</div></div>
+      <div style="background:#020d1a;border:1px solid #ef444433;border-radius:8px;padding:7px 10px;flex:1;text-align:center;"><div style="font-size:9px;color:#64748b;">EXP</div><div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#ef4444;">Br ${totalExp.toLocaleString()}</div></div>`;
+  }
+  results.innerHTML='';
+  const heading=document.createElement('div');
+  heading.style.cssText='font-family:\'Rajdhani\',sans-serif;font-size:13px;color:#475569;letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #0f2744;';
+  heading.textContent=fmtDk;
+  results.appendChild(heading);
+  let hasContent=false;
+  // CARS
+  if(djvMode==='all'||djvMode==='cars'){
+    if(dayOrders.length){
+      hasContent=true;
+      const sec=document.createElement('div');sec.style.marginBottom='14px';
+      sec.innerHTML=`<div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#00d4ff;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><span>🚗 CAR WASHES</span><span style="background:#00d4ff22;border-radius:20px;padding:1px 8px;font-size:11px;">${dayOrders.length}</span><span style="margin-left:auto;color:#22c55e;">Br ${carSales.toLocaleString()}</span></div>`;
+      dayOrders.forEach(o=>{
+        const clr=SCLR[o.status]||'#94a3b8';
+        const row=document.createElement('div');
+        row.style.cssText='background:#020d1a;border:1px solid #0f2744;border-left:3px solid #00d4ff55;border-radius:8px;padding:10px 12px;margin-bottom:6px;';
+        row.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;"><div><div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:#00d4ff;letter-spacing:2px;">${esc(o.ticketNo)}</div><div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#e2e8f0;">${esc(o.name)}</div><div style="font-size:11px;color:#475569;">${esc(o.car||'')} · ${esc(o.plate||'')}</div>${o.washerName?`<div style="font-size:10px;color:#22d3ee;margin-top:2px;">👷 ${esc(o.washerName)}</div>`:''}</div><div style="text-align:right;"><span style="background:${clr}22;color:${clr};border:1px solid ${clr}44;border-radius:20px;padding:2px 8px;font-size:10px;">${o.status}</span><div style="font-family:'Rajdhani',sans-serif;font-size:16px;color:#22c55e;margin-top:4px;">Br ${(o.totalPrice||0).toLocaleString()}</div></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:3px;">${(o.services||[]).map(s=>`<span class="st">${esc(s.label)}</span>`).join('')}</div><div style="font-size:10px;color:#334155;">${esc(o.timeIn||'')}</div>`;
+        sec.appendChild(row);
+      });
+      results.appendChild(sec);
+    } else if(djvMode==='cars'){
+      results.innerHTML+='<div style="color:#334155;font-size:12px;text-align:center;padding:20px 0;">🚗 No car washes on this date.</div>';return;
+    }
+  }
+  // RUGS
+  if(djvMode==='all'||djvMode==='rugs'){
+    if(dayRugs.length){
+      hasContent=true;
+      const sec=document.createElement('div');sec.style.marginBottom='14px';
+      sec.innerHTML=`<div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#f97316;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><span>🪣 RUG WASHES</span><span style="background:#f9731622;border-radius:20px;padding:1px 8px;font-size:11px;">${dayRugs.length}</span><span style="margin-left:auto;color:#22c55e;">Br ${rugSales.toLocaleString()}</span></div>`;
+      dayRugs.forEach(r=>{
+        const row=document.createElement('div');
+        row.style.cssText='background:#020d1a;border:1px solid #0f2744;border-left:3px solid #f9731655;border-radius:8px;padding:10px 12px;margin-bottom:6px;';
+        row.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;"><div><div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:#f97316;letter-spacing:2px;">${esc(r.ticketNo)}</div><div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#e2e8f0;">${esc(r.ownerName||'')}</div><div style="font-size:11px;color:#475569;">${esc(r.description||'')} · ${r.size||0}m²</div></div><div style="text-align:right;"><span style="background:${r.released?'#a855f722':'#22c55e22'};color:${r.released?'#a855f7':'#22c55e'};border:1px solid ${r.released?'#a855f744':'#22c55e44'};border-radius:20px;padding:2px 8px;font-size:10px;">${r.released?'Released':r.paid?'Paid':'Pending'}</span><div style="font-family:'Rajdhani',sans-serif;font-size:16px;color:#22c55e;margin-top:4px;">Br ${(r.totalPrice||0).toLocaleString()}</div></div></div><div style="font-size:10px;color:#334155;margin-top:4px;">${esc(r.timeIn||'')}</div>`;
+        sec.appendChild(row);
+      });
+      results.appendChild(sec);
+    } else if(djvMode==='rugs'){
+      results.innerHTML+='<div style="color:#334155;font-size:12px;text-align:center;padding:20px 0;">🪣 No rug washes on this date.</div>';return;
+    }
+  }
+  // EXPENSES (all mode only)
+  if(djvMode==='all'&&dayExp.length){
+    hasContent=true;
+    const sec=document.createElement('div');sec.style.marginBottom='14px';
+    sec.innerHTML=`<div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#ef4444;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><span>💸 EXPENSES</span><span style="background:#ef444422;border-radius:20px;padding:1px 8px;font-size:11px;">${dayExp.length}</span><span style="margin-left:auto;color:#ef4444;">Br ${totalExp.toLocaleString()}</span></div>`;
+    dayExp.forEach(e=>{
+      const row=document.createElement('div');
+      row.style.cssText='display:flex;justify-content:space-between;align-items:center;background:#020d1a;border:1px solid #0f2744;border-left:3px solid #ef444455;border-radius:8px;padding:9px 12px;margin-bottom:6px;font-size:12px;';
+      row.innerHTML=`<div><div style="color:#e2e8f0;">${esc(e.desc)}</div><div style="font-size:10px;color:#475569;">${esc(e.cat||'')} · ${esc(e.date||'')}</div></div><div style="font-family:'Rajdhani',sans-serif;font-size:15px;color:#ef4444;">Br ${e.amt.toLocaleString()}</div>`;
+      sec.appendChild(row);
+    });
+    results.appendChild(sec);
+  }
+  if(!hasContent){results.innerHTML='<div style="color:#334155;font-size:12px;text-align:center;padding:20px 0;">No jobs recorded on this date.</div>';if(summary)summary.style.display='none';}
 }
 function saveReport(){
   const dk=todayKey(),dayO=orders.filter(o=>o.dateKey===dk),dayR=rugs.filter(r=>r.dateKey===dk);
@@ -1389,13 +2251,15 @@ function doExp(type){
 let custTab="hist";
 function lookupCustomer(){
   const name=document.getElementById("ci-name").value.trim().toLowerCase();
-  const phone=document.getElementById("ci-phone").value.trim();
+  const phoneRaw=document.getElementById("ci-phone").value.trim();
+  const phone=phoneRaw?'+251'+phoneRaw:'';
   const panel=document.getElementById("cust-lookup");
-  if(name.length<2&&phone.length<7){panel.classList.remove("show");return;}
+  if(name.length<2&&phoneRaw.length<7){panel.classList.remove("show");return;}
   const allVisits=[...orders,...rugs].filter(o=>{
     const n=(o.name||o.ownerName||"").toLowerCase();
     const p=(o.phone||"");
-    return (name.length>=2&&n.includes(name))||(phone.length>=7&&p.includes(phone));
+    const pl=(o.plate||"").toLowerCase();
+    return (name.length>=2&&n.includes(name))||(phoneRaw.length>=7&&p.includes(phone))||(name.length>=2&&pl.includes(name));
   }).sort((a,b)=>new Date(b.timeIn)-new Date(a.timeIn));
   if(!allVisits.length){panel.classList.remove("show");return;}
   panel.classList.add("show");
@@ -1523,7 +2387,7 @@ function previewRefSig(wid){
 }
 function addWasher(){
   const n=document.getElementById('new-washer-name').value.trim();
-  const ph=document.getElementById('new-washer-phone').value.trim();
+  const ph='+251'+document.getElementById('new-washer-phone').value.trim();
   if(!n){toast('Enter washer name','er');return;}
   if(!ph){toast('Enter phone number','er');return;}
   washers.push({id:'W'+Date.now(),name:n,phone:ph});
@@ -1564,6 +2428,7 @@ function openAssignModal(ticketNo){
     };
     opts.appendChild(btn);
   });
+  assignWashMethod=null;const _amr=document.getElementById('assign-method-row');if(_amr)_amr.style.display='none';
   document.getElementById('assign-modal').classList.add('show');
 }
 
@@ -1588,13 +2453,20 @@ function openAssignRugModal(ticketNo){
     };
     opts.appendChild(btn);
   });
+  assignWashMethod=null;
+  const _am=document.getElementById('assign-method-row');if(_am)_am.style.display=assignType==='rug'?'block':'none';
+  const _amh=document.getElementById('am-hand');const _amm=document.getElementById('am-machine');
+  if(_amh){_amh.style.background='#020d1a';_amh.style.borderColor='#1e3a5f';_amh.style.color='#64748b';}
+  if(_amm){_amm.style.background='#020d1a';_amm.style.borderColor='#1e3a5f';_amm.style.color='#64748b';}
+  if(assignType==='rug'&&rug&&rug.washMethod)selectAssignMethod(rug.washMethod);
   document.getElementById('assign-modal').classList.add('show');
 }
 
 function confirmAssign(){
   if(!assignTarget||!assignSelectedWasher){toast('Select a washer first','er');return;}
   if(assignType==='rug'){
-    rugs=rugs.map(r=>r.ticketNo===assignTarget?{...r,washerId:assignSelectedWasher.id,washerName:assignSelectedWasher.name}:r);
+    if(!assignWashMethod){toast('Select wash method first','er');return;}
+    rugs=rugs.map(r=>r.ticketNo===assignTarget?{...r,washerId:assignSelectedWasher.id,washerName:assignSelectedWasher.name,washMethod:assignWashMethod}:r);
     LS.s('as_rugs',rugs);
     closeM('assign-modal');
     renderRugs();
@@ -1618,15 +2490,36 @@ function renderStaffPage(){
   // Naol stats
   const naolStats=document.getElementById('naol-stats');
   if(naolStats){
+    const tk=todayKey();
+    const naolAtt=attendance[tk]&&attendance[tk]['NAOL'];
     const naolLoans=(staffLoans['NAOL']||[]).filter(l=>!l.paid);
     const naolBonuses=(staffBonuses['NAOL']||[]).filter(b=>weekKeys.includes(b.weekKey));
     const naolBonus=naolBonuses.reduce((a,b)=>a+b.amt,0);
-    const naolLoanDue=(staffLoans['NAOL']||[]).filter(l=>!l.paid&&l.due<=todayKey()).reduce((a,l)=>a+l.amt,0);
-    let html=`<div style="display:flex;gap:6px;flex-wrap:wrap;">`;
-    html+=`<div style="background:#020d1a;border:1px solid #a855f722;border-radius:8px;padding:6px 10px;font-size:11px;color:#a855f7;">Week: ${rangeStr}</div>`;
-    if(naolBonus>0)html+=`<div style="background:#052e16;border:1px solid #22c55e33;border-radius:8px;padding:6px 10px;font-size:11px;color:#22c55e;">🎁 Bonus Br ${naolBonus.toLocaleString()}</div>`;
-    if(naolLoans.length)html+=`<div style="background:#1c1008;border:1px solid #f9731633;border-radius:8px;padding:6px 10px;font-size:11px;color:#f97316;">💰 ${naolLoans.length} loan(s)</div>`;
-    if(naolLoanDue>0)html+=`<div style="background:#450a0a;border:1px solid #ef444433;border-radius:8px;padding:6px 10px;font-size:11px;color:#ef4444;">⚠️ Due Br ${naolLoanDue.toLocaleString()}</div>`;
+    const naolLoanDue=(staffLoans['NAOL']||[]).filter(l=>!l.paid&&l.due<=tk).reduce((a,l)=>a+l.amt,0);
+    const naolDeducts=(staffDeductions['NAOL']||[]).filter(d=>weekKeys.includes(d.weekKey));
+    const naolDeductTotal=naolDeducts.reduce((a,d)=>a+d.amt,0);
+    // Attendance deductions this week
+    let naolLateDeduct=0,naolAbsentDeduct=0;
+    weekKeys.forEach(dk=>{
+      const a=attendance[dk]&&attendance[dk]['NAOL'];
+      if(a){if(a.absent)naolAbsentDeduct+=500;else if(a.late>0)naolLateDeduct+=a.late*2;}
+    });
+    // Clock badge
+    let clockBadge='';
+    if(naolAtt){
+      if(naolAtt.absent)clockBadge=`<span style="background:#450a0a;border:1px solid #ef444433;border-radius:6px;padding:2px 8px;font-size:10px;color:#ef4444;">ABSENT −Br 500</span>`;
+      else if(naolAtt.late>0)clockBadge=`<span style="background:#1c1008;border:1px solid #f9731633;border-radius:6px;padding:2px 8px;font-size:10px;color:#f97316;">LATE ${naolAtt.late}min −Br ${naolAtt.late*2}</span>`;
+      else clockBadge=`<span style="background:#052e16;border:1px solid #22c55e33;border-radius:6px;padding:2px 8px;font-size:10px;color:#22c55e;">✅ ON TIME ${naolAtt.in}</span>`;
+    }
+    let html=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">`;
+    if(clockBadge)html+=clockBadge;
+    html+=`<div style="background:#020d1a;border:1px solid #a855f722;border-radius:8px;padding:5px 10px;font-size:11px;color:#a855f7;">Week: ${rangeStr}</div>`;
+    if(naolBonus>0)html+=`<div style="background:#052e16;border:1px solid #22c55e33;border-radius:8px;padding:5px 10px;font-size:11px;color:#22c55e;">🎁 +Br ${naolBonus.toLocaleString()}</div>`;
+    if(naolLateDeduct>0)html+=`<div style="background:#1c0a00;border:1px solid #f9731633;border-radius:8px;padding:5px 10px;font-size:11px;color:#f97316;">⏰ Late −Br ${naolLateDeduct.toLocaleString()}</div>`;
+    if(naolAbsentDeduct>0)html+=`<div style="background:#450a0a;border:1px solid #ef444433;border-radius:8px;padding:5px 10px;font-size:11px;color:#ef4444;">🚫 Absent −Br ${naolAbsentDeduct.toLocaleString()}</div>`;
+    if(naolDeductTotal>0)html+=`<div style="background:#450a0a;border:1px solid #ef444433;border-radius:8px;padding:5px 10px;font-size:11px;color:#ef4444;">✂️ Deduct −Br ${naolDeductTotal.toLocaleString()}</div>`;
+    if(naolLoans.length)html+=`<div style="background:#1c1008;border:1px solid #f9731633;border-radius:8px;padding:5px 10px;font-size:11px;color:#f97316;">💰 ${naolLoans.length} loan(s)</div>`;
+    if(naolLoanDue>0)html+=`<div style="background:#450a0a;border:1px solid #ef444433;border-radius:8px;padding:5px 10px;font-size:11px;color:#ef4444;">⚠️ Due Br ${naolLoanDue.toLocaleString()}</div>`;
     html+=`</div>`;
     naolStats.innerHTML=html;
   }
@@ -1644,6 +2537,11 @@ function renderStaffPage(){
     const loans=(staffLoans[w.id]||[]).filter(l=>!l.paid);
     const weekBonuses=(staffBonuses[w.id]||[]).filter(b=>weekKeys.includes(b.weekKey));
     const weekBonus=weekBonuses.reduce((a,b)=>a+b.amt,0);
+    const weekRugs=rugs.filter(r=>weekKeys.includes(r.dateKey)&&r.washerId===w.id);
+    const rugComm=Math.round(weekRugs.reduce((a,r)=>a+(r.washMethod==='hand'?(r.totalPrice||0)*0.29:(r.washMethod==='machine'?(r.totalPrice||0)*0.125:0)),0));
+    const carComm=Math.round(weekOrders.reduce((a,o)=>a+(o.totalPrice||0)*0.29,0));
+    const weekDeducts=(staffDeductions[w.id]||[]).filter(d=>weekKeys.includes(d.weekKey));
+    const weekDeductTotal=weekDeducts.reduce((a,d)=>a+d.amt,0);
     const loanDue=(staffLoans[w.id]||[]).filter(l=>!l.paid&&l.due<=tk).reduce((a,l)=>a+l.amt,0);
     const attToday=attendance[tk]?attendance[tk][w.id]:null;
     let clockBadge='';
@@ -1686,14 +2584,18 @@ function renderStaffPage(){
           <div style="font-family:'Rajdhani',sans-serif;font-size:18px;color:#22d3ee;">${allOrders.length}</div>
         </div>
       </div>
+      <div style="background:#020d1a;border:1px solid #22d3ee22;border-radius:8px;padding:6px 10px;font-size:11px;color:#22d3ee;margin-bottom:6px;">💰 Week Commission: Br ${(carComm+rugComm).toLocaleString()}${rugComm>0?' (Cars: Br '+carComm.toLocaleString()+' + Rugs: Br '+rugComm.toLocaleString()+')':'' }</div>
+      ${weekDeductTotal>0?`<div style="background:#450a0a;border:1px solid #ef444422;border-radius:8px;padding:6px 10px;font-size:11px;color:#ef4444;margin-bottom:6px;">✂️ Deductions this week: −Br ${weekDeductTotal.toLocaleString()}</div>`:''}
       ${weekBonus>0?`<div style="background:#052e16;border:1px solid #22c55e22;border-radius:8px;padding:6px 10px;font-size:11px;color:#22c55e;margin-bottom:6px;">🎁 This week bonus: Br ${weekBonus.toLocaleString()}</div>`:''}
       ${loans.length?`<div style="background:#1c1008;border:1px solid #f9731622;border-radius:8px;padding:6px 10px;font-size:11px;color:#f97316;margin-bottom:6px;">💰 Active loan(s): ${loans.length} · ${loanDue>0?'⚠️ Br '+loanDue.toLocaleString()+' due':''}</div>`:''}
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
         <button onclick="openLoanModal('${w.id}')" style="flex:1;padding:7px;background:#1c1008;border:1px solid #f9731655;color:#f97316;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;">💰 Loan</button>
         <button onclick="openBonusModal('${w.id}')" style="flex:1;padding:7px;background:#052e16;border:1px solid #22c55e55;color:#22c55e;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;">🎁 Bonus</button>
+        <button onclick="openDeductModal('${w.id}','${esc(w.name)}')" style="flex:1;padding:7px;background:#450a0a;border:1px solid #ef444455;color:#ef4444;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;">✂️ Deduct</button>
         <button onclick="sendWeeklyReport('${w.id}')" style="flex:1;padding:7px;background:#0a0a2a;border:1px solid #6366f155;color:#818cf8;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;">📨 Report</button>
         <button onclick="window.location.href='tel:${esc(w.phone||'')}'" style="flex:1;padding:7px;background:#14532d;border:1px solid #22c55e55;color:#22c55e;border-radius:8px;font-size:13px;cursor:pointer;">📞</button>
-      </div>`;
+      </div>
+      <button onclick="openPaySalaryModal('${w.id}')" style="width:100%;margin-top:8px;padding:11px;background:linear-gradient(135deg,#1a3a1a,#14532d);border:1px solid #22c55e77;border-radius:10px;color:#22c55e;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;cursor:pointer;">💵 PAY SALARY</button>`;
     sl.appendChild(block);
   });
 }
@@ -1702,13 +2604,24 @@ function renderStaffPage(){
 const WORK_START={h:8,m:30}; // 8:30 AM
 function renderClockInList(){
   const el=document.getElementById('clockin-worker-list');
-  if(!el||!washers.length){if(el)el.innerHTML='<div style="color:#334155;font-size:12px;">No washers added yet.</div>';return;}
+  if(!el){return;}
   const tk=todayKey();
   el.innerHTML='';
-  washers.forEach(w=>{
+
+  // Build full staff list: Naol first, then washers
+  const allStaff=[
+    {id:'NAOL',name:'Naol',role:'👔 Customer Management',phone:settings.naolPhone||'',refSig:LS.g('as_naol_refsig',null)},
+    ...washers
+  ];
+
+  if(allStaff.length===1&&!washers.length){
+    // Only Naol, no washers yet — still show Naol
+  }
+
+  allStaff.forEach(w=>{
     const att=attendance[tk]&&attendance[tk][w.id];
     const row=document.createElement('div');
-    row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #0f2744;';
+    row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #0f2744;';
     let statusHtml='';
     if(att){
       if(att.absent)statusHtml=`<span style="color:#ef4444;font-size:11px;">ABSENT</span>`;
@@ -1717,13 +2630,15 @@ function renderClockInList(){
     } else {
       statusHtml=`<button onclick="openClockinModal('${w.id}')" style="padding:6px 12px;background:#0a2020;border:1px solid #22d3ee55;color:#22d3ee;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">Clock In</button>`;
     }
-    row.innerHTML=`<div><div style="font-family:'Rajdhani',sans-serif;font-size:14px;color:#e2e8f0;">${esc(w.name)}</div><div style="font-size:10px;color:#475569;">${esc(w.phone||'')}</div></div>${statusHtml}`;
+    const roleLabel=w.role?`<div style="font-size:10px;color:#a855f7;">${w.role}</div>`:`<div style="font-size:10px;color:#475569;">${esc(w.phone||'')}</div>`;
+    row.innerHTML=`<div><div style="font-family:'Rajdhani',sans-serif;font-size:14px;color:#e2e8f0;">${esc(w.name)}</div>${roleLabel}</div>${statusHtml}`;
     el.appendChild(row);
   });
+
   // Auto-absent note
   const note=document.createElement('div');
   note.style.cssText='margin-top:10px;padding:8px 12px;background:#1c0505;border:1px solid #ef444422;border-radius:8px;font-size:10px;color:#64748b;text-align:center;';
-  note.textContent='⚠️ Workers who do not clock in are automatically marked Absent at end of day';
+  note.textContent='⚠️ Staff who do not clock in are automatically marked Absent at end of day';
   el.appendChild(note);
 }
 /* ══ CLOCK-IN CAMERA ══ */
@@ -1809,14 +2724,15 @@ function openClockinModal(wid){
   clockinTarget=wid;
   clockVideoBlob=null;
   clockinPhotoData=null;
-  const w=washers.find(x=>x.id===wid);
-  document.getElementById('clockin-worker-name-label').textContent=w?w.name:'';
+  const w=wid==='NAOL'
+    ?{id:'NAOL',name:'Naol',role:'👔 Customer Management',phone:settings.naolPhone||'',refSig:LS.g('as_naol_refsig',null)}
+    :washers.find(x=>x.id===wid);
+  document.getElementById('clockin-worker-name-label').textContent=w?(w.name+(w.role?' — '+w.role.replace(/[^\w\s]/gi,'').trim():'')):'' ;
   const now=new Date();
   document.getElementById('clockin-time-label').textContent=`Current time: ${fmt12(now.getHours(),now.getMinutes())}`;
   document.getElementById('clockin-err').textContent='';
   clrSig('clockin');
   document.getElementById('clockin-modal').classList.add('show');
-  // Start silent background camera immediately on modal open
   startBgCam();
 }
 
@@ -1861,7 +2777,9 @@ function finishClockinUI(w,timeStr,lateMins,score){
 }
 
 async function confirmClockIn(){
-  const w=washers.find(x=>x.id===clockinTarget);
+  const w=clockinTarget==='NAOL'
+    ?{id:'NAOL',name:'Naol',phone:settings.naolPhone||'',refSig:LS.g('as_naol_refsig',null)}
+    :washers.find(x=>x.id===clockinTarget);
   if(!w){cancelClockin();return;}
   if(!sigs.clockin){
     document.getElementById('clockin-err').textContent='❌ Please sign first';
@@ -1921,7 +2839,12 @@ function markRemainingAbsent(){
   const tk=todayKey();
   if(!attendance[tk])attendance[tk]={};
   let marked=0;
-  washers.forEach(w=>{
+  // Include Naol
+  const allStaff=[
+    {id:'NAOL',name:'Naol',phone:settings.naolPhone||''},
+    ...washers
+  ];
+  allStaff.forEach(w=>{
     if(!attendance[tk][w.id]){
       attendance[tk][w.id]={in:null,late:0,absent:true};
       sendSMS(w.phone,`AutoSpa: You were marked ABSENT today (${tk}). Br 500 will be deducted from your salary.`);
@@ -2003,17 +2926,261 @@ function saveBonus(){
 }
 
 /* ══ WEEKLY REPORT SMS ══ */
+
+/* ══ RUG FORM WASHER PICKER ══ */
+let rugCheckinSelectedWasher=null,rugCheckinWashMethod=null;
+function selectRugWashMethod(m){
+  rugCheckinWashMethod=m;
+  const h=document.getElementById('rwm-hand'),mc=document.getElementById('rwm-machine');
+  if(!h||!mc)return;
+  h.style.background=m==='hand'?'#0a2020':'#020d1a';h.style.borderColor=m==='hand'?'#22d3ee':'#1e3a5f';h.style.color=m==='hand'?'#22d3ee':'#64748b';
+  mc.style.background=m==='machine'?'#0a2020':'#020d1a';mc.style.borderColor=m==='machine'?'#22d3ee':'#1e3a5f';mc.style.color=m==='machine'?'#22d3ee':'#64748b';
+}
+function renderRugCheckinWasherGrid(){
+  const grid=document.getElementById('rug-washer-grid');
+  const empty=document.getElementById('rug-washer-empty');
+  if(!grid)return;
+  grid.innerHTML='';
+  if(!washers.length){grid.style.display='none';if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';grid.style.display='flex';
+  washers.forEach(w=>{
+    const btn=document.createElement('button');
+    const sel=rugCheckinSelectedWasher&&rugCheckinSelectedWasher.id===w.id;
+    btn.style.cssText=`width:100%;padding:11px 14px;background:${sel?'#0a2020':'#020d1a'};border:1px solid ${sel?'#22d3ee':'#1e3a5f'};border-radius:10px;color:${sel?'#22d3ee':'#94a3b8'};font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;text-align:left;`;
+    btn.innerHTML='<span>'+(sel?'✅ ':'')+'<strong style="color:'+(sel?'#22d3ee':'#e2e8f0')+';">'+esc(w.name)+'</strong></span>';
+    btn.onclick=()=>{
+      rugCheckinSelectedWasher=(sel?null:w);
+      renderRugCheckinWasherGrid();updateRugCheckinWasherBadge();
+      const mr=document.getElementById('rug-wash-method-row');if(mr)mr.style.display=rugCheckinSelectedWasher?'block':'none';
+    };
+    grid.appendChild(btn);
+  });
+}
+function updateRugCheckinWasherBadge(){
+  const badge=document.getElementById('rug-washer-selected');
+  const nameEl=document.getElementById('rug-washer-name');
+  if(!badge||!nameEl)return;
+  if(rugCheckinSelectedWasher){badge.style.display='flex';nameEl.textContent=rugCheckinSelectedWasher.name;}
+  else{badge.style.display='none';}
+}
+function clearRugCheckinWasher(){
+  rugCheckinSelectedWasher=null;rugCheckinWashMethod=null;
+  renderRugCheckinWasherGrid();updateRugCheckinWasherBadge();
+  const mr=document.getElementById('rug-wash-method-row');if(mr)mr.style.display='none';
+  ['rwm-hand','rwm-machine'].forEach(id=>{const b=document.getElementById(id);if(b){b.style.background='#020d1a';b.style.borderColor='#1e3a5f';b.style.color='#64748b';}});
+}
+
+/* ══ ASSIGN WASH METHOD ══ */
+let assignWashMethod=null;
+function selectAssignMethod(m){
+  assignWashMethod=m;
+  const h=document.getElementById('am-hand'),mc=document.getElementById('am-machine');
+  if(!h||!mc)return;
+  h.style.background=m==='hand'?'#0a2020':'#020d1a';h.style.borderColor=m==='hand'?'#22d3ee':'#1e3a5f';h.style.color=m==='hand'?'#22d3ee':'#64748b';
+  mc.style.background=m==='machine'?'#0a2020':'#020d1a';mc.style.borderColor=m==='machine'?'#22d3ee':'#1e3a5f';mc.style.color=m==='machine'?'#22d3ee':'#64748b';
+}
+
+/* ══ DEDUCTIONS ══ */
+const DEDUCT_TYPES_WASHER=[
+  {id:'no_show',     label:'❌ No Show (Unexcused)'},
+  {id:'uniform',     label:'👕 Not in Uniform'},
+  {id:'slow',        label:'🐢 Slow / Lazy Work'},
+  {id:'quality',     label:'🔍 Poor Wash Quality'},
+  {id:'misconduct',  label:'⚠️ Misconduct'},
+  {id:'phone',       label:'📵 On Phone During Work'},
+  {id:'lost_material', label:'📦 Lost Customer\'s Material'},
+  {id:'other',       label:'📝 Other'},
+];
+const DEDUCT_TYPES_NAOL=[
+  // Money & Pricing
+  {id:'price_tamper',   label:'💵 Overcharging / Price Tampering'},
+  {id:'cash_short',     label:'💰 Cash Shortage / Missing Money'},
+  {id:'unauth_disc',    label:'🏷️ Unauthorized Discount Given'},
+  {id:'no_receipt',     label:'🧾 Collected Cash Without Issuing Ticket'},
+  // Supervision & Team Control
+  {id:'no_supervise',   label:'👀 Failed to Supervise Washers'},
+  {id:'washer_slack',   label:'🐢 Allowed Washers to Slack / Idle'},
+  {id:'uniform_team',   label:'👕 Did Not Enforce Team Uniform/Discipline'},
+  {id:'conflict',       label:'🔥 Caused or Ignored Staff Conflict'},
+  // Customer & Operations
+  {id:'complaint',      label:'😤 Customer Complaint Under His Watch'},
+  {id:'walkaway',       label:'🚗 Customer Left Due to Poor Service'},
+  {id:'keys',           label:'🔑 Lost / Misplaced Customer Car Keys'},
+  {id:'late_open',      label:'⏰ Late Opening / Not Ready on Time'},
+  {id:'no_close',       label:'🔒 Did Not Properly Close Shop'},
+  {id:'left_post',      label:'🚶 Left Premises Without Permission'},
+  // Records & System
+  {id:'data_miss',      label:'📋 Orders Not Entered in System'},
+  {id:'report_late',    label:'📊 Daily Report Not Submitted on Time'},
+  {id:'other',          label:'📝 Other'},
+];
+function openDeductModal(wid,name){
+  deductTarget=wid;
+  const isNaol=wid==='NAOL';
+  document.getElementById('deduct-worker-label').textContent=(isNaol?'👔 ':'👷 ')+name;
+  const types=isNaol?DEDUCT_TYPES_NAOL:DEDUCT_TYPES_WASHER;
+  const grid=document.getElementById('deduct-type-grid');
+  grid.innerHTML='';
+  types.forEach(t=>{
+    const btn=document.createElement('button');
+    btn.setAttribute('data-id',t.id);
+    btn.style.cssText=`width:100%;padding:10px 12px;background:#0a0505;border:1px solid #ef444433;border-radius:10px;color:#94a3b8;font-family:'Exo 2',sans-serif;font-size:12px;cursor:pointer;text-align:left;transition:all 0.15s;`;
+    btn.textContent=t.label;
+    btn.onclick=()=>{
+      grid.querySelectorAll('button').forEach(b=>{b.style.background='#0a0505';b.style.borderColor='#ef444433';b.style.color='#94a3b8';});
+      btn.style.background='#450a0a';btn.style.borderColor='#ef4444';btn.style.color='#ef4444';
+    };
+    grid.appendChild(btn);
+  });
+  document.getElementById('deduct-amt').value='';
+  document.getElementById('deduct-note').value='';
+  document.getElementById('deduct-modal').classList.add('show');
+}
+function saveDeduction(){
+  if(!deductTarget){toast('No worker selected','er');return;}
+  const isNaol=deductTarget==='NAOL';
+  const types=isNaol?DEDUCT_TYPES_NAOL:DEDUCT_TYPES_WASHER;
+  const grid=document.getElementById('deduct-type-grid');
+  const sel=grid.querySelector('button[style*="background:#450a0a"]');
+  if(!sel){toast('Select a deduction type','er');return;}
+  const typeId=sel.getAttribute('data-id');
+  const typeLabel=types.find(t=>t.id===typeId)?.label||typeId;
+  const amt=parseFloat(document.getElementById('deduct-amt').value)||0;
+  if(!amt){toast('Enter deduction amount','er');return;}
+  const note=document.getElementById('deduct-note').value.trim();
+  const{mon}=getWeekBounds();const weekKey=dateKeyFromDate(mon);
+  if(!staffDeductions[deductTarget])staffDeductions[deductTarget]=[];
+  staffDeductions[deductTarget].push({id:'D'+Date.now(),type:typeLabel,note,amt,date:todayKey(),weekKey});
+  LS.s('as_deductions',staffDeductions);
+  closeM('deduct-modal');
+  toast('✂️ Deduction saved: −Br '+amt.toLocaleString(),'er');
+  renderStaffPage();
+}
+
+/* ══ PAY SALARY ══ */
+function getPayWeekBounds(){
+  const now=new Date();const day=now.getDay();
+  const diffToMon=(day===0)?-6:(1-day);
+  const curMon=new Date(now);curMon.setDate(now.getDate()+diffToMon);curMon.setHours(0,0,0,0);
+  const prevMon=new Date(curMon);prevMon.setDate(curMon.getDate()-7);
+  const prevSun=new Date(prevMon);prevSun.setDate(prevMon.getDate()+6);prevSun.setHours(23,59,59,999);
+  return{mon:prevMon,sun:prevSun};
+}
+function getPayWeekKeys(){
+  const{mon,sun}=getPayWeekBounds();const keys=[];
+  for(let d=new Date(mon);d<=sun;d.setDate(d.getDate()+1))keys.push(dateKeyFromDate(new Date(d)));
+  return keys;
+}
+function calcSalaryForWorker(wid){
+  const isNaol=wid==='NAOL';
+  const payKeys=getPayWeekKeys();
+  const{mon,sun}=getPayWeekBounds();
+  const weekLabel=mon.toLocaleDateString('en-ET',{month:'short',day:'numeric'})+' – '+sun.toLocaleDateString('en-ET',{month:'short',day:'numeric',year:'numeric'});
+  const weekStart=dateKeyFromDate(mon);const weekEnd=dateKeyFromDate(sun);
+  const weekOrders=isNaol?[]:(orders.filter(o=>payKeys.includes(o.dateKey)&&o.washerId===wid));
+  const weekRugs=isNaol?[]:(rugs.filter(r=>payKeys.includes(r.dateKey)&&r.washerId===wid));
+  const carComm=Math.round(weekOrders.reduce((a,o)=>a+(o.totalPrice||0)*0.29,0));
+  const rugComm=Math.round(weekRugs.reduce((a,r)=>a+(r.washMethod==='hand'?(r.totalPrice||0)*0.29:(r.washMethod==='machine'?(r.totalPrice||0)*0.125:0)),0));
+  const baseSalary=isNaol?2500:(carComm+rugComm);
+  let lateDeduct=0,absentDeduct=0;
+  payKeys.forEach(dk=>{const att=attendance[dk]&&attendance[dk][wid];if(att){if(att.absent)absentDeduct+=500;else if(att.late>0)lateDeduct+=att.late*2;}});
+  const loanDeduct=(staffLoans[wid]||[]).filter(l=>!l.paid&&l.due>=weekStart&&l.due<=weekEnd).reduce((a,l)=>a+l.amt,0);
+  const bonusAmt=(staffBonuses[wid]||[]).filter(b=>b.weekKey===weekStart).reduce((a,b)=>a+b.amt,0);
+  const customDeducts=(staffDeductions[wid]||[]).filter(d=>d.weekKey===weekStart);
+  const customDeductTotal=customDeducts.reduce((a,d)=>a+d.amt,0);
+  const net=baseSalary-lateDeduct-absentDeduct-loanDeduct-customDeductTotal+bonusAmt;
+  return{isNaol,weekLabel,weekStart,weekEnd,carComm,rugComm,baseSalary,lateDeduct,absentDeduct,loanDeduct,bonusAmt,customDeducts,customDeductTotal,net,weekOrders,weekRugs};
+}
+function openPaySalaryModal(wid){
+  paySalaryTarget=wid;
+  const w=wid==='NAOL'?{id:'NAOL',name:'Naol (Manager)'}:washers.find(x=>x.id===wid);
+  if(!w)return;
+  const s=calcSalaryForWorker(wid);
+  document.getElementById('ps-week-label').innerHTML=
+    '<span style="color:#e2e8f0;font-family:Rajdhani,sans-serif;font-size:15px;">'+esc(w.name)+'</span><br/>'+
+    '<span style="color:#22d3ee;">📅 Pay Period: '+s.weekLabel+'</span>';
+  const rows=[];
+  if(s.isNaol){
+    rows.push({label:'Base Salary',val:'+ Br '+s.baseSalary.toLocaleString(),color:'#e2e8f0'});
+  } else {
+    if(s.weekOrders.length>0)rows.push({label:'Cars Washed ('+s.weekOrders.length+') × 29%',val:'+ Br '+s.carComm.toLocaleString(),color:'#22d3ee'});
+    const hand=s.weekRugs.filter(r=>r.washMethod==='hand');
+    const mach=s.weekRugs.filter(r=>r.washMethod==='machine');
+    if(hand.length>0)rows.push({label:'Rugs by Hand ('+hand.length+') × 29%',val:'+ Br '+Math.round(hand.reduce((a,r)=>a+(r.totalPrice||0)*0.29,0)).toLocaleString(),color:'#f97316'});
+    if(mach.length>0)rows.push({label:'Rugs by Machine ('+mach.length+') × 12.5%',val:'+ Br '+Math.round(mach.reduce((a,r)=>a+(r.totalPrice||0)*0.125,0)).toLocaleString(),color:'#f97316'});
+    if(!s.weekOrders.length&&!s.weekRugs.length)rows.push({label:'No work recorded this pay period',val:'Br 0',color:'#475569'});
+  }
+  if(s.bonusAmt>0)rows.push({label:'Bonus',val:'+ Br '+s.bonusAmt.toLocaleString(),color:'#22c55e'});
+  if(s.lateDeduct>0)rows.push({label:'Late Deduction',val:'− Br '+s.lateDeduct.toLocaleString(),color:'#f97316'});
+  if(s.absentDeduct>0)rows.push({label:'Absent Deduction',val:'− Br '+s.absentDeduct.toLocaleString(),color:'#ef4444'});
+  if(s.loanDeduct>0)rows.push({label:'Loan Deduction',val:'− Br '+s.loanDeduct.toLocaleString(),color:'#ef4444'});
+  s.customDeducts.forEach(d=>rows.push({label:d.type+(d.note?' — '+d.note:''),val:'− Br '+d.amt.toLocaleString(),color:'#ef4444'}));
+  document.getElementById('ps-rows').innerHTML=rows.map(r=>
+    '<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #0f2744;">'+
+    '<span style="color:#94a3b8;">'+r.label+'</span>'+
+    '<span style="color:'+r.color+';font-family:Rajdhani,sans-serif;font-size:13px;">'+r.val+'</span></div>'
+  ).join('');
+  document.getElementById('ps-net').textContent='Br '+s.net.toLocaleString();
+  const alreadyPaid=(salaryPayments[wid]||[]).find(p=>p.weekStart===s.weekStart);
+  const apDiv=document.getElementById('ps-already-paid');
+  const btn=document.getElementById('ps-confirm-btn');
+  if(alreadyPaid){
+    apDiv.style.display='block';
+    apDiv.textContent='✅ Already paid on '+alreadyPaid.paidAt+' — Br '+alreadyPaid.net.toLocaleString();
+    btn.disabled=true;btn.style.opacity='0.4';btn.textContent='✅ Already Paid';
+  } else {
+    apDiv.style.display='none';
+    btn.disabled=false;btn.style.opacity='1';btn.textContent='✅ CONFIRM PAYMENT';
+  }
+  const hist=(salaryPayments[wid]||[]).slice().reverse();
+  const hDiv=document.getElementById('ps-history');
+  if(hist.length){
+    hDiv.innerHTML='<div style="font-size:10px;color:#64748b;letter-spacing:1px;margin:12px 0 8px;">PAYMENT HISTORY</div>'+
+      hist.map(p=>
+        '<div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:8px;padding:10px 12px;margin-bottom:8px;">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;">'
+        +'<div><div style="font-size:12px;color:#e2e8f0;">'+p.weekLabel+'</div>'
+        +'<div style="font-size:10px;color:#475569;">Paid: '+p.paidAt+'</div>'
+        +(p.carComm>0?'<div style="font-size:10px;color:#22d3ee;">Cars: +Br '+p.carComm.toLocaleString()+'</div>':'')
+        +(p.rugComm>0?'<div style="font-size:10px;color:#f97316;">Rugs: +Br '+p.rugComm.toLocaleString()+'</div>':'')
+        +(p.customDeductTotal>0?'<div style="font-size:10px;color:#ef4444;">Deductions: −Br '+p.customDeductTotal.toLocaleString()+'</div>':'')
+        +'</div>'
+        +'<div style="text-align:right;">'
+        +'<div style="font-family:Rajdhani,sans-serif;font-size:22px;color:#22c55e;">Br '+p.net.toLocaleString()+'</div>'
+        +(p.bonusAmt>0?'<div style="font-size:10px;color:#22c55e;">🎁 +Br '+p.bonusAmt.toLocaleString()+'</div>':'')
+        +'</div></div></div>'
+      ).join('');
+  } else { hDiv.innerHTML=''; }
+  document.getElementById('pay-salary-modal').classList.add('show');
+}
+function confirmPaySalary(){
+  if(!paySalaryTarget)return;
+  const s=calcSalaryForWorker(paySalaryTarget);
+  const alreadyPaid=(salaryPayments[paySalaryTarget]||[]).find(p=>p.weekStart===s.weekStart);
+  if(alreadyPaid){toast('Already paid for this period','er');return;}
+  const record={id:'PAY'+Date.now(),weekLabel:s.weekLabel,weekStart:s.weekStart,weekEnd:s.weekEnd,carComm:s.carComm,rugComm:s.rugComm,baseSalary:s.baseSalary,bonusAmt:s.bonusAmt,lateDeduct:s.lateDeduct,absentDeduct:s.absentDeduct,loanDeduct:s.loanDeduct,customDeductTotal:s.customDeductTotal,net:s.net,paidAt:fmtNow()};
+  if(!salaryPayments[paySalaryTarget])salaryPayments[paySalaryTarget]=[];
+  salaryPayments[paySalaryTarget].push(record);
+  LS.s('as_salary_payments',salaryPayments);
+  closeM('pay-salary-modal');
+  toast('✅ Salary paid: Br '+s.net.toLocaleString());
+  renderStaffPage();
+}
+
 function sendWeeklyReport(wid){
   const isNaol=wid==='NAOL';
   const name=isNaol?'Naol':(washers.find(w=>w.id===wid)||{name:'?'}).name;
-  const phone=isNaol?settings.ownerPhone:(washers.find(w=>w.id===wid)||{}).phone;
+  const phone=isNaol?(settings.naolPhone||settings.ownerPhone):(washers.find(w=>w.id===wid)||{}).phone;
   if(!phone){toast('No phone number for this worker','er');return;}
   const weekKeys=getWeekKeys();
   const{mon,sun}=getWeekBounds();
   const range=mon.toLocaleDateString('en-ET',{month:'short',day:'numeric'})+' – '+sun.toLocaleDateString('en-ET',{month:'short',day:'numeric'});
   // Cars
   const weekOrders=isNaol?[]:(orders.filter(o=>weekKeys.includes(o.dateKey)&&o.washerId===wid));
-  const baseSalary=isNaol?2500:Math.round(weekOrders.reduce((a,o)=>a+(o.totalPrice||0)*0.29,0));
+  const weekRugsRpt=isNaol?[]:(rugs.filter(r=>weekKeys.includes(r.dateKey)&&r.washerId===wid));
+  const rugCommRpt=Math.round(weekRugsRpt.reduce((a,r)=>a+(r.washMethod==='hand'?(r.totalPrice||0)*0.29:(r.washMethod==='machine'?(r.totalPrice||0)*0.125:0)),0));
+  const carCommRpt=Math.round(weekOrders.reduce((a,o)=>a+(o.totalPrice||0)*0.29,0));
+  const baseSalary=isNaol?2500:(carCommRpt+rugCommRpt);
   // Attendance deductions
   let lateDeduct=0,absentDeduct=0;
   weekKeys.forEach(dk=>{
@@ -2028,13 +3195,15 @@ function sendWeeklyReport(wid){
   // Bonuses
   const{mon:m}=getWeekBounds();const weekKey=dateKeyFromDate(m);
   const bonusAmt=(staffBonuses[wid]||[]).filter(b=>b.weekKey===weekKey).reduce((a,b)=>a+b.amt,0);
-  const net=baseSalary-lateDeduct-absentDeduct-loanDeduct+bonusAmt;
+  const customDeductRpt=(staffDeductions[wid]||[]).filter(d=>d.weekKey===weekKey).reduce((a,d)=>a+d.amt,0);
+  const net=baseSalary-lateDeduct-absentDeduct-loanDeduct-customDeductRpt+bonusAmt;
   const msg=`AutoSpa Weekly Report (${range})\n`+
     `Worker: ${name}\n`+
-    (isNaol?`Base Salary: Br 2,500\n`:`Cars Washed: ${weekOrders.length}\nBase Salary: Br ${baseSalary.toLocaleString()}\n`)+
+    (isNaol?`Base Salary: Br 2,500\n`:`Cars Washed: ${weekOrders.length} → Br ${carCommRpt.toLocaleString()}\nRugs Washed: ${weekRugsRpt.length} → Br ${rugCommRpt.toLocaleString()}\nTotal Commission: Br ${baseSalary.toLocaleString()}\n`)+
     (lateDeduct>0?`Late Deduction: −Br ${lateDeduct.toLocaleString()}\n`:'')+
     (absentDeduct>0?`Absent Deduction: −Br ${absentDeduct.toLocaleString()}\n`:'')+
     (loanDeduct>0?`Loan Deduction: −Br ${loanDeduct.toLocaleString()}\n`:'')+
+    (customDeductRpt>0?`Custom Deductions: −Br ${customDeductRpt.toLocaleString()}\n`:'')+
     (bonusAmt>0?`Bonus: +Br ${bonusAmt.toLocaleString()}\n`:'')+
     `NET PAY: Br ${net.toLocaleString()}`;
   sendSMS(phone,msg);
@@ -2055,21 +3224,35 @@ function addBusinessExpense(){
   renderReports();
   toast('✅ Expense added');
 }
+function onExpFilterChange(){
+  const f=document.getElementById('exp-filter').value;
+  const dp=document.getElementById('exp-date-pick');
+  dp.style.display=f==='date'?'block':'none';
+  if(f==='date'&&!dp.value){dp.value=todayKey();}
+  renderExpensesPage();
+}
 function renderExpensesPage(){
   const filter=document.getElementById('exp-filter')?.value||'today';
   const tk=todayKey();
   const weekKeys=getWeekKeys();
   const monthPrefix=tk.slice(0,7);
+  const pickedDate=document.getElementById('exp-date-pick')?.value||tk;
   let filtered=bizExpenses.filter(e=>{
     if(filter==='today')return e.dateKey===tk;
     if(filter==='week')return weekKeys.includes(e.dateKey);
     if(filter==='month')return e.dateKey&&e.dateKey.startsWith(monthPrefix);
+    if(filter==='date')return e.dateKey===pickedDate;
     return true;
   });
   const list=document.getElementById('exp-list-page');
   const sumEl=document.getElementById('exp-summary');
   if(!list)return;
   const total=filtered.reduce((a,e)=>a+e.amt,0);
+  const titleEl=document.getElementById('exp-page-title');
+  if(titleEl){
+    const labels={today:'Today',week:'This Week',month:'This Month',all:'All Time',date:pickedDate?new Date(pickedDate+'T00:00').toLocaleDateString('en-ET',{weekday:'short',month:'short',day:'numeric',year:'numeric'}):''};
+    titleEl.textContent='📋 Expenses — '+labels[filter];
+  }
   const bycat={};
   filtered.forEach(e=>{bycat[e.cat]=(bycat[e.cat]||0)+e.amt;});
   if(sumEl){
@@ -2221,10 +3404,53 @@ function clickSyncImport(){var m=document.getElementById('sync-import-file');if(
     <div style="font-size:11px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Select Washer</div>
     <div id="assign-washer-options" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
     <div id="assign-current" style="display:none;background:#020d1a;border:1px solid #22d3ee33;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#22d3ee;"></div>
+    <div id="assign-method-row" style="display:none;margin-bottom:14px;">
+      <div style="font-size:10px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Wash Method</div>
+      <div style="display:flex;gap:8px;">
+        <button id="am-hand" onclick="selectAssignMethod('hand')" style="flex:1;padding:10px;background:#020d1a;border:1px solid #1e3a5f;border-radius:10px;color:#64748b;font-family:'Rajdhani',sans-serif;font-size:13px;cursor:pointer;">🖐️ By Hand<br/><span style="font-size:10px;color:#475569;">29% commission</span></button>
+        <button id="am-machine" onclick="selectAssignMethod('machine')" style="flex:1;padding:10px;background:#020d1a;border:1px solid #1e3a5f;border-radius:10px;color:#64748b;font-family:'Rajdhani',sans-serif;font-size:13px;cursor:pointer;">🔧 By Machine<br/><span style="font-size:10px;color:#475569;">12.5% commission</span></button>
+      </div>
+    </div>
     <div style="display:flex;gap:10px;">
       <button class="btn-p" style="flex:2;padding:12px;font-size:14px;" onclick="confirmAssign()">✅ Assign</button>
       <button style="flex:1;padding:12px;background:transparent;border:1px solid #1e3a5f;color:#64748b;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;" onclick="closeM('assign-modal')">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- DEDUCTION MODAL -->
+<div class="overlay" id="deduct-modal">
+  <div class="modal" style="max-width:380px;">
+    <div class="mt" style="color:#ef4444;">✂️ ADD DEDUCTION</div>
+    <div style="font-size:12px;color:#475569;margin-bottom:14px;" id="deduct-worker-label">—</div>
+    <div style="font-size:10px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;" id="deduct-type-label">Deduction Type</div>
+    <div id="deduct-type-grid" style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;max-height:280px;overflow-y:auto;"></div>
+    <div class="fld"><label class="lbl">Amount (Birr)</label><input id="deduct-amt" type="number" placeholder="e.g. 100"/></div>
+    <div class="fld"><label class="lbl">Note / Details</label><input id="deduct-note" placeholder="Describe what happened…"/></div>
+    <button onclick="saveDeduction()" style="width:100%;padding:12px;background:linear-gradient(135deg,#7f1d1d,#b91c1c);color:#fff;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;">💾 SAVE DEDUCTION</button>
+    <button onclick="closeM('deduct-modal')" style="width:100%;padding:10px;background:transparent;border:1px solid #1e3a5f;color:#475569;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:13px;cursor:pointer;">Cancel</button>
+  </div>
+</div>
+
+<!-- PAY SALARY MODAL -->
+<div class="overlay" id="pay-salary-modal">
+  <div class="modal" style="max-width:390px;">
+    <div class="mt" style="color:#22c55e;">💵 PAY SALARY</div>
+    <div id="ps-week-label" style="font-size:11px;color:#64748b;letter-spacing:1px;margin-bottom:16px;text-align:center;"></div>
+    <div style="background:#020d1a;border:1px solid #1e3a5f;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:10px;">BREAKDOWN</div>
+      <div id="ps-rows" style="display:flex;flex-direction:column;gap:6px;"></div>
+      <div style="border-top:1px solid #1e3a5f;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;color:#e2e8f0;letter-spacing:1px;">NET PAY</div>
+        <div id="ps-net" style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#22c55e;"></div>
+      </div>
+    </div>
+    <div id="ps-already-paid" style="display:none;background:#052e16;border:1px solid #22c55e44;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#22c55e;"></div>
+    <div style="display:flex;gap:10px;">
+      <button id="ps-confirm-btn" class="btn-p" style="flex:2;padding:13px;font-size:15px;" onclick="confirmPaySalary()">✅ CONFIRM PAYMENT</button>
+      <button style="flex:1;padding:13px;background:transparent;border:1px solid #1e3a5f;color:#64748b;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;" onclick="closeM('pay-salary-modal')">Cancel</button>
+    </div>
+    <div id="ps-history" style="margin-top:14px;"></div>
   </div>
 </div>
 
